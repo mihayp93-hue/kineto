@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  DISCHARGED
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum PlanStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+}
+
+enum NotificationType {
+  EXERCISE_REMINDER
+  MESSAGE
+  PLAN_ASSIGNED
+  PLAN_UPDATED
+  PROGRESS_MILESTONE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  phone     String?
+  avatarUrl String?
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientProfile  ClientProfile?
+  exercises      Exercise[]
+  treatmentPlans TreatmentPlan[]
+  sessionNotes   SessionNote[]
+  sentMessages   Message[]      @relation("SentMessages")
+  receivedMessages Message[]    @relation("ReceivedMessages")
+  notifications  Notification[]
+}
+
+model ClientProfile {
+  id               String       @id @default(cuid())
+  userId           String       @unique
+  dateOfBirth      DateTime?
+  medicalNotes     String?
+  emergencyContact String?
+  status           ClientStatus @default(ACTIVE)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedPlans    TreatmentPlan[]
+  progressEntries  ProgressEntry[]
+  progressPhotos   ProgressPhoto[]
+  sessionNotes     SessionNote[]
+}
+
+model Exercise {
+  id           String     @id @default(cuid())
+  title        String
+  description  String
+  videoUrl     String
+  thumbnailUrl String?
+  duration     Int?
+  category     String
+  difficulty   Difficulty @default(BEGINNER)
+  bodyPart     String[]
+  equipment    String[]
+  instructions String?
+  createdById  String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  createdBy    User              @relation(fields: [createdById], references: [id])
+  annotations  VideoAnnotation[]
+  planExercises PlanExercise[]
+}
+
+model VideoAnnotation {
+  id           String   @id @default(cuid())
+  exerciseId   String
+  timestampSec Float
+  note         String
+  createdAt    DateTime @default(now())
+
+  exercise     Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+}
+
+model TreatmentPlan {
+  id              String     @id @default(cuid())
+  name            String
+  description     String?
+  clientProfileId String
+  createdById     String
+  startDate       DateTime
+  endDate         DateTime?
+  status          PlanStatus @default(ACTIVE)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  createdBy       User          @relation(fields: [createdById], references: [id])
+  exercises       PlanExercise[]
+}
+
+model PlanExercise {
+  id               String  @id @default(cuid())
+  treatmentPlanId  String
+  exerciseId       String
+  sets             Int?
+  reps             Int?
+  holdSeconds      Int?
+  frequencyPerWeek Int?
+  orderIndex       Int     @default(0)
+  notes            String?
+  progressionRule  String?
+
+  treatmentPlan    TreatmentPlan        @relation(fields: [treatmentPlanId], references: [id], onDelete: Cascade)
+  exercise         Exercise             @relation(fields: [exerciseId], references: [id])
+  completions      ExerciseCompletion[]
+  schedule         ExerciseSchedule[]
+}
+
+model ExerciseCompletion {
+  id              String   @id @default(cuid())
+  planExerciseId  String
+  completedAt     DateTime @default(now())
+  setsCompleted   Int?
+  repsCompleted   Int?
+  painLevel       Int?
+  difficultyFelt  Int?
+  rangeOfMotion   Int?
+  notes           String?
+
+  planExercise    PlanExercise @relation(fields: [planExerciseId], references: [id], onDelete: Cascade)
+}
+
+model ExerciseSchedule {
+  id             String @id @default(cuid())
+  planExerciseId String
+  dayOfWeek      Int
+  timeOfDay      String?
+
+  planExercise   PlanExercise @relation(fields: [planExerciseId], references: [id], onDelete: Cascade)
+}
+
+model ProgressEntry {
+  id              String   @id @default(cuid())
+  clientProfileId String
+  date            DateTime
+  painLevel       Int?
+  mobilityScore   Int?
+  generalNotes    String?
+  createdAt       DateTime @default(now())
+
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+}
+
+model ProgressPhoto {
+  id              String   @id @default(cuid())
+  clientProfileId String
+  imageUrl        String
+  caption         String?
+  takenAt         DateTime
+  createdAt       DateTime @default(now())
+
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+}
+
+model SessionNote {
+  id              String    @id @default(cuid())
+  clientProfileId String
+  authorId        String
+  date            DateTime
+  content         String
+  nextAppointment DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  author          User          @relation(fields: [authorId], references: [id])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender     User @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   User @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String?
+  isRead    Boolean          @default(false)
+  actionUrl String?
+  createdAt DateTime         @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
