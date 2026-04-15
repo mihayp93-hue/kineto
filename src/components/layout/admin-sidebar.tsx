@@ -29,8 +29,15 @@ export function AdminSidebar() {
   const router = useRouter();
 
   async function handleLogout() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    // Clear dev-bypass cookie (used when Supabase isn't configured)
+    document.cookie = "dev-role=; path=/; max-age=0";
+    // Also sign out of Supabase if it's actually configured
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch {
+      // Supabase not configured (dev mode) — ignore
+    }
     router.push("/login");
     router.refresh();
   }
