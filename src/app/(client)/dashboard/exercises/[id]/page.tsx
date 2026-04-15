@@ -35,7 +35,7 @@ export default async function ClientExerciseDetailPage({
   const exercise = planExercise.exercise;
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <Link
         href="/dashboard/exercises"
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"

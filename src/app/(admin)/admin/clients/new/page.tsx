@@ -57,7 +57,7 @@ export default function NewClientPage() {
   }
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-4 md:p-8 max-w-2xl">
       <Link
         href="/admin/clients"
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -76,7 +76,7 @@ export default function NewClientPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nume complet *</Label>
                 <Input
@@ -98,7 +98,7 @@ export default function NewClientPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefon</Label>
                 <Input

@@ -116,7 +116,7 @@ export default function EditExercisePage() {
 
   if (initialLoading) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-muted-foreground">Se încarcă...</p>
       </div>
     );
@@ -124,14 +124,14 @@ export default function EditExercisePage() {
 
   if (!data) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-destructive">{error || "Exercițiu negăsit"}</p>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 md:p-8 max-w-3xl">
       <Link
         href={`/admin/exercises/${id}`}
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -200,7 +200,7 @@ export default function EditExercisePage() {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="category">Categorie *</Label>
                 <select

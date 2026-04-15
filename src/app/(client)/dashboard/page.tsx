@@ -42,10 +42,10 @@ export default async function ClientDashboard() {
 
   if (!profile) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <h1 className="text-3xl font-bold mb-4">Bine ai venit, {user.name}</h1>
         <Card>
-          <CardContent className="p-8 text-center text-muted-foreground">
+          <CardContent className="p-4 md:p-8 text-center text-muted-foreground">
             Fizioterapeutul tău nu ți-a atribuit încă niciun exercițiu. Revino
             în curând!
           </CardContent>
@@ -72,7 +72,7 @@ export default async function ClientDashboard() {
     totalExercises > 0 ? Math.round((todayCompletions / totalExercises) * 100) : 0;
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Bine ai revenit, {user.name}</h1>
         <p className="text-muted-foreground">

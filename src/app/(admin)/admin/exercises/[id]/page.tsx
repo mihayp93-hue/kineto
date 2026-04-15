@@ -28,7 +28,7 @@ export default async function ExerciseDetailPage({
   if (!exercise) notFound();
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <Link
         href="/admin/exercises"
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -37,7 +37,7 @@ export default async function ExerciseDetailPage({
         Înapoi la exerciții
       </Link>
 
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold">{exercise.title}</h1>
           <div className="flex items-center gap-2 mt-2">

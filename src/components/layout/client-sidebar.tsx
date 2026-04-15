@@ -12,10 +12,13 @@ import {
   User,
   LogOut,
   Home,
+  Menu,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Acasă", icon: Home },
@@ -29,11 +32,14 @@ const navItems = [
 export function ClientSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   async function handleLogout() {
-    // Clear dev-bypass cookie (used when Supabase isn't configured)
     document.cookie = "dev-role=; path=/; max-age=0";
-    // Also sign out of Supabase if it's actually configured
     try {
       const supabase = createClient();
       await supabase.auth.signOut();
@@ -44,17 +50,24 @@ export function ClientSidebar() {
     router.refresh();
   }
 
-  return (
-    <aside className="w-64 border-r bg-white flex flex-col h-full">
-      <div className="p-6 border-b">
+  const nav = (
+    <>
+      <div className="p-6 border-b flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2">
           <Activity className="h-7 w-7 text-primary" />
           <span className="text-xl font-bold">PhysioConnect</span>
         </Link>
-        <p className="text-xs text-muted-foreground mt-1">Portal pacient</p>
+        <button
+          className="md:hidden p-1 text-muted-foreground"
+          aria-label="Închide meniul"
+          onClick={() => setOpen(false)}
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
+      <p className="text-xs text-muted-foreground px-6 pb-2">Portal pacient</p>
 
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -87,6 +100,41 @@ export function ClientSidebar() {
           Deconectare
         </Button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 h-14 border-b bg-white">
+        <button
+          className="p-2 -ml-2"
+          aria-label="Deschide meniul"
+          onClick={() => setOpen(true)}
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <Activity className="h-5 w-5 text-primary" />
+          <span className="font-semibold">PhysioConnect</span>
+        </Link>
+        <span className="w-9" />
+      </header>
+
+      <aside className="hidden md:flex w-64 border-r bg-white flex-col h-full shrink-0">
+        {nav}
+      </aside>
+
+      {open && (
+        <div className="md:hidden fixed inset-0 z-40 flex">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setOpen(false)}
+          />
+          <aside className="relative w-72 max-w-[85%] bg-white flex flex-col h-full shadow-xl">
+            {nav}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }

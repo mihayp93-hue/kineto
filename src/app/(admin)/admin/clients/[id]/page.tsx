@@ -61,7 +61,7 @@ export default async function ClientDetailPage({
   );
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <Link
         href="/admin/clients"
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -70,7 +70,7 @@ export default async function ClientDetailPage({
         Înapoi la pacienți
       </Link>
 
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold">{client.name}</h1>
           <p className="text-muted-foreground">{client.email}</p>
@@ -119,7 +119,7 @@ export default async function ClientDetailPage({
         <TabsContent value="plans" className="mt-6">
           {profile.assignedPlans.length === 0 ? (
             <Card>
-              <CardContent className="p-8 text-center">
+              <CardContent className="p-4 md:p-8 text-center">
                 <ClipboardList className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
                 <p className="text-muted-foreground">
                   Niciun plan de tratament încă.
@@ -223,7 +223,7 @@ export default async function ClientDetailPage({
             </Link>
             {profile.sessionNotes.length === 0 ? (
               <Card>
-                <CardContent className="p-8 text-center text-muted-foreground">
+                <CardContent className="p-4 md:p-8 text-center text-muted-foreground">
                   Nicio notă de ședință încă.
                 </CardContent>
               </Card>

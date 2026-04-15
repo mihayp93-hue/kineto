@@ -81,7 +81,7 @@ export default function NewExercisePage() {
   }
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 md:p-8 max-w-3xl">
       <Link
         href="/admin/exercises"
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -145,7 +145,7 @@ export default function NewExercisePage() {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="category">Categorie *</Label>
                 <select

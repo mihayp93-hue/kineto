@@ -137,7 +137,7 @@ export default function NewTreatmentPlanPage() {
   );
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <Link
         href={`/admin/clients/${clientId}`}
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -175,7 +175,7 @@ export default function NewTreatmentPlanPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="startDate">Data începerii *</Label>
                 <Input
@@ -268,7 +268,7 @@ export default function NewTreatmentPlanPage() {
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
-                    <div className="grid grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
                         <Label className="text-xs">Seturi</Label>
                         <Input

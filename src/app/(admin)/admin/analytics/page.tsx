@@ -85,7 +85,7 @@ export default async function AnalyticsPage() {
     .reverse();
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Analize</h1>
         <p className="text-muted-foreground">

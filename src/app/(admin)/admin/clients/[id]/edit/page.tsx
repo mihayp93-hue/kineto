@@ -167,7 +167,7 @@ export default function EditClientPage() {
 
   if (initialLoading) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-muted-foreground">Se încarcă...</p>
       </div>
     );
@@ -175,7 +175,7 @@ export default function EditClientPage() {
 
   if (!data) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-destructive">{error || "Pacient negăsit"}</p>
       </div>
     );
@@ -185,7 +185,7 @@ export default function EditClientPage() {
   const available = library.filter((ex) => !assignedIds.has(ex.id));
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 md:p-8 max-w-3xl">
       <Link
         href={`/admin/clients/${id}`}
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -201,7 +201,7 @@ export default function EditClientPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nume complet *</Label>
                 <Input
@@ -226,7 +226,7 @@ export default function EditClientPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefon</Label>
                 <Input

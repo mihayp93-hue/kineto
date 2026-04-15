@@ -53,7 +53,7 @@ export default async function CalendarPage() {
     ) ?? [];
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Calendar exerciții</h1>
         <p className="text-muted-foreground">

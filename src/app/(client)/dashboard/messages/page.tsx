@@ -23,7 +23,7 @@ export default async function MessagesPage() {
   const admin = await prisma.user.findFirst({ where: { role: "ADMIN" } });
 
   return (
-    <div className="p-8 h-[calc(100vh-2rem)]">
+    <div className="p-4 md:p-8 h-[calc(100vh-2rem)]">
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Mesaje</h1>
         <p className="text-muted-foreground">
