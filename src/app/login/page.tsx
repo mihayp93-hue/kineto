@@ -35,25 +35,12 @@ export default function LoginPage() {
               <span className="text-2xl font-bold tracking-tight">PhysioConnect</span>
             </Link>
           </div>
-          <CardTitle>Bine ai venit la PhysioConnect</CardTitle>
+          <CardTitle>Bine ai revenit</CardTitle>
           <CardDescription>
-            Alege un rol pentru a explora platforma
+            Continuă recuperarea ta în cont
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button
-            className="w-full h-16 text-lg justify-start gap-4"
-            onClick={() => loginAs("ADMIN")}
-          >
-            <Stethoscope className="h-6 w-6" />
-            <div className="text-left">
-              <div className="font-semibold">Fizioterapeut</div>
-              <div className="text-xs font-normal opacity-80">
-                Dr. Physio &mdash; admin@physioconnect.com
-              </div>
-            </div>
-          </Button>
-
           <Button
             variant="outline"
             className="w-full h-16 text-lg justify-start gap-4"
@@ -61,16 +48,29 @@ export default function LoginPage() {
           >
             <User className="h-6 w-6" />
             <div className="text-left">
-              <div className="font-semibold">Pacient</div>
+              <div className="font-semibold">Sunt pacient</div>
               <div className="text-xs font-normal opacity-80">
-                Jane Doe &mdash; client@example.com
+                Acces la planul meu de recuperare
+              </div>
+            </div>
+          </Button>
+
+          <Button
+            className="w-full h-16 text-lg justify-start gap-4"
+            onClick={() => loginAs("ADMIN")}
+          >
+            <Stethoscope className="h-6 w-6" />
+            <div className="text-left">
+              <div className="font-semibold">Panou administrator</div>
+              <div className="text-xs font-normal opacity-80">
+                Acces rezervat — doar pentru terapeut
               </div>
             </div>
           </Button>
 
           <p className="text-xs text-center text-muted-foreground mt-4">
-            Mod dezvoltare: autentificarea Supabase este dezactivată.
-            Configurează-ți datele Supabase în .env pentru autentificarea de producție.
+            Nu ai încă un cont? Contactează direct terapeutul pentru a fi
+            adăugat ca pacient.
           </p>
         </CardContent>
       </Card>
