@@ -28,10 +28,35 @@ export async function getCurrentUser() {
   const session = await getSession();
   if (!session) return null;
 
-  const user = await prisma.user.findUnique({
+  let user = await prisma.user.findUnique({
     where: { email: session.email! },
     include: { clientProfile: true },
   });
+
+  // Dev-mode self-healing: if the bypass user doesn't exist yet (e.g. seed
+  // hasn't run), create it on the fly so writes don't 401.
+  if (!user && isDevMode()) {
+    if (session.email === "admin@physioconnect.com") {
+      user = await prisma.user.create({
+        data: {
+          email: "admin@physioconnect.com",
+          name: "Dr. Physio",
+          role: "ADMIN",
+        },
+        include: { clientProfile: true },
+      });
+    } else if (session.email === "client@example.com") {
+      user = await prisma.user.create({
+        data: {
+          email: "client@example.com",
+          name: "Jane Doe",
+          role: "CLIENT",
+          clientProfile: { create: { status: "ACTIVE" } },
+        },
+        include: { clientProfile: true },
+      });
+    }
+  }
 
   return user;
 }
