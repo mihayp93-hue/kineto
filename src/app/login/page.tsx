@@ -22,13 +22,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-white to-emerald-100/40 p-4 relative overflow-hidden">
+      <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-emerald-300/20 blur-3xl" />
+      <Card className="relative w-full max-w-md shadow-xl shadow-primary/10">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <Link href="/" className="flex items-center gap-2">
-              <Activity className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold">PhysioConnect</span>
+              <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <Activity className="h-5 w-5" />
+              </div>
+              <span className="text-2xl font-bold tracking-tight">PhysioConnect</span>
             </Link>
           </div>
           <CardTitle>Bine ai venit la PhysioConnect</CardTitle>

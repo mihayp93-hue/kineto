@@ -54,8 +54,10 @@ export function ClientSidebar() {
     <>
       <div className="p-6 border-b flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <Activity className="h-7 w-7 text-primary" />
-          <span className="text-xl font-bold">PhysioConnect</span>
+          <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+            <Activity className="h-5 w-5" />
+          </div>
+          <span className="text-xl font-bold tracking-tight">PhysioConnect</span>
         </Link>
         <button
           className="md:hidden p-1 text-muted-foreground"
@@ -114,8 +116,10 @@ export function ClientSidebar() {
           <Menu className="h-5 w-5" />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2">
-          <Activity className="h-5 w-5 text-primary" />
-          <span className="font-semibold">PhysioConnect</span>
+          <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+            <Activity className="h-4 w-4" />
+          </div>
+          <span className="font-semibold tracking-tight">PhysioConnect</span>
         </Link>
         <span className="w-9" />
       </header>
