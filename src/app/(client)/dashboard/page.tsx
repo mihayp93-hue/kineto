@@ -13,6 +13,7 @@ import {
   Calendar,
   Play,
 } from "lucide-react";
+import { getVideoThumbnail } from "@/lib/video-url";
 
 export const dynamic = "force-dynamic";
 
@@ -165,19 +166,37 @@ export default async function ClientDashboard() {
                     className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted transition-colors"
                   >
                     <div className="flex items-center gap-4">
-                      <div
-                        className={`p-2 rounded-full ${
-                          completedToday
-                            ? "bg-green-100 text-green-600"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {completedToday ? (
-                          <CheckCircle className="h-5 w-5" />
-                        ) : (
-                          <Play className="h-5 w-5" />
-                        )}
-                      </div>
+                      {(() => {
+                        const thumb =
+                          pe.exercise.thumbnailUrl ||
+                          getVideoThumbnail(pe.exercise.videoUrl);
+                        return (
+                          <div className="relative w-16 h-12 rounded-md overflow-hidden bg-muted shrink-0">
+                            {thumb && (
+                              <img
+                                src={thumb}
+                                alt={pe.exercise.title}
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                            <div
+                              className={`absolute inset-0 flex items-center justify-center ${
+                                completedToday
+                                  ? "bg-green-600/70 text-white"
+                                  : thumb
+                                  ? "bg-black/30 text-white"
+                                  : "text-muted-foreground"
+                              }`}
+                            >
+                              {completedToday ? (
+                                <CheckCircle className="h-5 w-5" />
+                              ) : (
+                                <Play className="h-5 w-5" />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
                       <div>
                         <p className="font-medium">{pe.exercise.title}</p>
                         <p className="text-sm text-muted-foreground">

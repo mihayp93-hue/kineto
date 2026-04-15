@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Video, CheckCircle, Clock } from "lucide-react";
+import { getVideoThumbnail } from "@/lib/video-url";
 
 export const dynamic = "force-dynamic";
 
@@ -66,16 +67,21 @@ export default async function ClientExercisesPage() {
               <Link key={pe.id} href={`/dashboard/exercises/${pe.id}`}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
                   <CardContent className="p-0">
-                    <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center relative">
-                      {pe.exercise.thumbnailUrl ? (
-                        <img
-                          src={pe.exercise.thumbnailUrl}
-                          alt={pe.exercise.title}
-                          className="w-full h-full object-cover rounded-t-lg"
-                        />
-                      ) : (
-                        <Video className="h-10 w-10 text-muted-foreground" />
-                      )}
+                    <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center relative overflow-hidden">
+                      {(() => {
+                        const thumb =
+                          pe.exercise.thumbnailUrl ||
+                          getVideoThumbnail(pe.exercise.videoUrl);
+                        return thumb ? (
+                          <img
+                            src={thumb}
+                            alt={pe.exercise.title}
+                            className="w-full h-full object-cover rounded-t-lg"
+                          />
+                        ) : (
+                          <Video className="h-10 w-10 text-muted-foreground" />
+                        );
+                      })()}
                       {completedToday && (
                         <div className="absolute top-2 right-2 bg-green-500 text-white p-1 rounded-full">
                           <CheckCircle className="h-4 w-4" />
