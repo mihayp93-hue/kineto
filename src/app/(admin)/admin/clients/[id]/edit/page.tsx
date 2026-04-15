@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Plus, X } from "lucide-react";
 
 interface ClientData {
   name: string;
@@ -26,6 +27,27 @@ interface ClientData {
   status: "ACTIVE" | "INACTIVE" | "DISCHARGED";
 }
 
+interface LibraryExercise {
+  id: string;
+  title: string;
+  category: string;
+  difficulty: string;
+  bodyPart: string[];
+}
+
+interface AssignedExercise {
+  id: string;
+  planId: string;
+  planName: string;
+  exerciseId: string;
+  exercise: LibraryExercise;
+  sets: number | null;
+  reps: number | null;
+  holdSeconds: number | null;
+  frequencyPerWeek: number | null;
+  notes: string | null;
+}
+
 export default function EditClientPage() {
   const router = useRouter();
   const params = useParams();
@@ -34,6 +56,15 @@ export default function EditClientPage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState("");
   const [data, setData] = useState<ClientData | null>(null);
+
+  const [library, setLibrary] = useState<LibraryExercise[]>([]);
+  const [assigned, setAssigned] = useState<AssignedExercise[]>([]);
+  const [assignBusy, setAssignBusy] = useState<string | null>(null);
+
+  const loadAssigned = useCallback(async () => {
+    const r = await fetch(`/api/clients/${id}/assigned-exercises`);
+    if (r.ok) setAssigned(await r.json());
+  }, [id]);
 
   useEffect(() => {
     fetch(`/api/clients/${id}`)
@@ -57,7 +88,14 @@ export default function EditClientPage() {
         setError("Nu s-a putut încărca pacientul");
         setInitialLoading(false);
       });
-  }, [id]);
+
+    fetch("/api/exercises")
+      .then((r) => r.json())
+      .then(setLibrary)
+      .catch(() => {});
+
+    loadAssigned();
+  }, [id, loadAssigned]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -91,6 +129,42 @@ export default function EditClientPage() {
     }
   }
 
+  async function addExercise(exerciseId: string) {
+    setAssignBusy(exerciseId);
+    try {
+      const res = await fetch(`/api/clients/${id}/assigned-exercises`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ exerciseId }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Asignarea a eșuat");
+      }
+      await loadAssigned();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Eroare");
+    } finally {
+      setAssignBusy(null);
+    }
+  }
+
+  async function removeAssigned(peId: string) {
+    setAssignBusy(peId);
+    try {
+      const res = await fetch(
+        `/api/clients/${id}/assigned-exercises/${peId}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error("Ștergerea a eșuat");
+      setAssigned((cur) => cur.filter((a) => a.id !== peId));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Eroare");
+    } finally {
+      setAssignBusy(null);
+    }
+  }
+
   if (initialLoading) {
     return (
       <div className="p-8">
@@ -107,8 +181,11 @@ export default function EditClientPage() {
     );
   }
 
+  const assignedIds = new Set(assigned.map((a) => a.exerciseId));
+  const available = library.filter((ex) => !assignedIds.has(ex.id));
+
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-8 max-w-3xl">
       <Link
         href={`/admin/clients/${id}`}
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
@@ -117,7 +194,7 @@ export default function EditClientPage() {
         Înapoi la pacient
       </Link>
 
-      <Card>
+      <Card className="mb-6">
         <CardHeader>
           <CardTitle>Editează pacient</CardTitle>
           <CardDescription>Actualizează detaliile pacientului</CardDescription>
@@ -229,6 +306,112 @@ export default function EditClientPage() {
               </Link>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      {/* Assigned exercises */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Exerciții asignate</CardTitle>
+          <CardDescription>
+            Exercițiile din planul activ al pacientului. Pentru seturi/repetări
+            detaliate folosește „Plan nou de tratament".
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {assigned.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Niciun exercițiu asignat încă.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {assigned.map((a) => (
+                <div
+                  key={a.id}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
+                  <div>
+                    <div className="font-medium text-sm">
+                      {a.exercise.title}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant="secondary" className="text-xs">
+                        {a.exercise.category}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {a.exercise.difficulty}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">
+                        {a.sets ?? "-"}×{a.reps ?? "-"}
+                        {a.frequencyPerWeek
+                          ? ` · ${a.frequencyPerWeek}/săpt`
+                          : ""}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        plan: {a.planName}
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={assignBusy === a.id}
+                    onClick={() => removeAssigned(a.id)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Library — add */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Adaugă din bibliotecă</CardTitle>
+          <CardDescription>
+            Apasă un exercițiu pentru a-l asigna pacientului. Se creează
+            automat un plan activ dacă nu există deja.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {library.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Biblioteca este goală.{" "}
+              <Link
+                href="/admin/exercises/new"
+                className="text-primary hover:underline"
+              >
+                Adaugă primul exercițiu
+              </Link>
+              .
+            </p>
+          ) : available.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Toate exercițiile din bibliotecă sunt deja asignate.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {available.map((ex) => (
+                <button
+                  key={ex.id}
+                  type="button"
+                  disabled={assignBusy === ex.id}
+                  onClick={() => addExercise(ex.id)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+                >
+                  <Plus className="h-3 w-3" />
+                  {ex.title}
+                  <Badge variant="outline" className="text-[10px] ml-1">
+                    {ex.category}
+                  </Badge>
+                </button>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
