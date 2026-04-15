@@ -130,7 +130,8 @@ export default function NewExercisePage() {
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Lipește un URL video de pe Supabase Storage, YouTube sau Vimeo
+                Acceptă URL-uri de la YouTube (youtube.com/watch sau youtu.be),
+                Vimeo, sau fișiere video directe (.mp4, .webm)
               </p>
             </div>
 

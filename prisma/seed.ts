@@ -62,8 +62,7 @@ async function main() {
       title: "Rotație externă umăr",
       description:
         "Exercițiu de mobilitate pentru articulația umărului. Crește amplitudinea mișcării și reduce tensiunea musculară.",
-      videoUrl:
-        "https://cdn.coverr.co/videos/coverr-a-man-doing-shoulder-exercises-6048/1080p.mp4",
+      videoUrl: "https://www.youtube.com/watch?v=XVc2_u6LvrM",
       category: "Mobilitate",
       difficulty: "BEGINNER" as const,
       bodyPart: ["Umăr"],
@@ -76,8 +75,7 @@ async function main() {
       title: "Extensii pentru genunchi",
       description:
         "Întărește cvadricepsul, esențial pentru stabilitatea genunchiului.",
-      videoUrl:
-        "https://cdn.coverr.co/videos/coverr-a-man-doing-squats-0127/1080p.mp4",
+      videoUrl: "https://www.youtube.com/watch?v=YyvSfVjQeL0",
       category: "Forță",
       difficulty: "INTERMEDIATE" as const,
       bodyPart: ["Genunchi", "Coapsă"],
@@ -90,8 +88,7 @@ async function main() {
       title: "Flexii cu bandă elastică",
       description:
         "Exercițiu izometric pentru umeri, ideal pentru recuperare timpurie.",
-      videoUrl:
-        "https://cdn.coverr.co/videos/coverr-woman-doing-yoga-at-home-6226/1080p.mp4",
+      videoUrl: "https://www.youtube.com/watch?v=4Y2ZdHCOXok",
       category: "Forță",
       difficulty: "BEGINNER" as const,
       bodyPart: ["Umăr", "Piept"],
@@ -102,8 +99,7 @@ async function main() {
       title: "Mobilizare cervicală",
       description:
         "Serie de mișcări lente pentru gât care reduc rigiditatea și durerea.",
-      videoUrl:
-        "https://cdn.coverr.co/videos/coverr-woman-stretching-in-the-park-5180/1080p.mp4",
+      videoUrl: "https://www.youtube.com/watch?v=2NOsE-VPpkE",
       category: "Mobilitate",
       difficulty: "BEGINNER" as const,
       bodyPart: ["Cervical"],
@@ -113,8 +109,7 @@ async function main() {
     {
       title: "Ridicări pe vârfuri",
       description: "Tonifică gambele și îmbunătățește propriocepția gleznei.",
-      videoUrl:
-        "https://cdn.coverr.co/videos/coverr-a-woman-jogs-on-the-beach-1543/1080p.mp4",
+      videoUrl: "https://www.youtube.com/watch?v=SxJ3gqPmuw0",
       category: "Forță",
       difficulty: "BEGINNER" as const,
       bodyPart: ["Gleznă", "Gambă"],

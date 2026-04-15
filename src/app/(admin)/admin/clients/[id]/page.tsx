@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Plus, Calendar, ClipboardList } from "lucide-react";
+import { ArrowLeft, Plus, Calendar, ClipboardList, Edit } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -93,12 +93,20 @@ export default async function ClientDetailPage({
             )}
           </div>
         </div>
-        <Link href={`/admin/clients/${id}/plans/new`}>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Plan nou de tratament
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href={`/admin/clients/${id}/edit`}>
+            <Button variant="outline">
+              <Edit className="h-4 w-4 mr-2" />
+              Editează
+            </Button>
+          </Link>
+          <Link href={`/admin/clients/${id}/plans/new`}>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Plan nou de tratament
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <Tabs defaultValue="plans">

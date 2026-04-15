@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Video, Clock } from "lucide-react";
+import { getVideoThumbnail } from "@/components/exercises/video-player";
 
 export const dynamic = "force-dynamic";
 
@@ -49,16 +50,21 @@ export default async function ExercisesPage() {
             <Link key={exercise.id} href={`/admin/exercises/${exercise.id}`}>
               <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
                 <CardContent className="p-0">
-                  <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center">
-                    {exercise.thumbnailUrl ? (
-                      <img
-                        src={exercise.thumbnailUrl}
-                        alt={exercise.title}
-                        className="w-full h-full object-cover rounded-t-lg"
-                      />
-                    ) : (
-                      <Video className="h-12 w-12 text-muted-foreground" />
-                    )}
+                  <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center overflow-hidden">
+                    {(() => {
+                      const thumb =
+                        exercise.thumbnailUrl ||
+                        getVideoThumbnail(exercise.videoUrl);
+                      return thumb ? (
+                        <img
+                          src={thumb}
+                          alt={exercise.title}
+                          className="w-full h-full object-cover rounded-t-lg"
+                        />
+                      ) : (
+                        <Video className="h-12 w-12 text-muted-foreground" />
+                      );
+                    })()}
                   </div>
                   <div className="p-4">
                     <h3 className="font-semibold mb-1">{exercise.title}</h3>
