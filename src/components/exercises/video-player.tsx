@@ -2,6 +2,9 @@
 
 import { useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { toEmbedUrl, isDirectVideoUrl } from "@/lib/video-url";
+
+export { toEmbedUrl, getVideoThumbnail } from "@/lib/video-url";
 
 interface Annotation {
   id: string;
@@ -45,7 +48,7 @@ export function VideoPlayer({ url, annotations = [] }: VideoPlayerProps) {
   }
 
   // Check if URL is a direct video file or an embeddable URL
-  const isDirectVideo = /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url);
+  const isDirectVideo = isDirectVideoUrl(url);
   const embedUrl = isDirectVideo ? url : toEmbedUrl(url);
 
   return (
@@ -113,38 +116,3 @@ function formatTimestamp(seconds: number): string {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-// Extract YouTube video ID from any common URL form
-function getYouTubeId(url: string): string | null {
-  // https://www.youtube.com/watch?v=ID  |  https://youtu.be/ID  |  /embed/ID  |  /shorts/ID
-  const patterns = [
-    /youtube\.com\/watch\?(?:.*&)?v=([^&]+)/,
-    /youtu\.be\/([^?&/]+)/,
-    /youtube\.com\/embed\/([^?&/]+)/,
-    /youtube\.com\/shorts\/([^?&/]+)/,
-  ];
-  for (const re of patterns) {
-    const m = url.match(re);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-// Vimeo ID from /video/123456789 or /123456789
-function getVimeoId(url: string): string | null {
-  const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  return m ? m[1] : null;
-}
-
-export function toEmbedUrl(url: string): string {
-  const ytId = getYouTubeId(url);
-  if (ytId) return `https://www.youtube.com/embed/${ytId}`;
-  const vId = getVimeoId(url);
-  if (vId) return `https://player.vimeo.com/video/${vId}`;
-  return url;
-}
-
-export function getVideoThumbnail(url: string): string | null {
-  const ytId = getYouTubeId(url);
-  if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-  return null;
-}

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Video, Clock } from "lucide-react";
-import { getVideoThumbnail } from "@/components/exercises/video-player";
+import { getVideoThumbnail } from "@/lib/video-url";
 
 export const dynamic = "force-dynamic";
 
