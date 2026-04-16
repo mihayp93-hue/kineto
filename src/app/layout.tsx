@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Inter,
-  Instrument_Serif,
-  Caveat,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
@@ -13,22 +8,10 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const serif = Instrument_Serif({
-  variable: "--font-serif",
+const display = Plus_Jakarta_Sans({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: "400",
-});
-
-const hand = Caveat({
-  variable: "--font-hand",
-  subsets: ["latin"],
-  weight: ["400", "600"],
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -45,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="ro"
-      className={`${inter.variable} ${serif.variable} ${hand.variable} ${mono.variable} h-full antialiased`}
+      className={`${inter.variable} ${display.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <TooltipProvider>{children}</TooltipProvider>

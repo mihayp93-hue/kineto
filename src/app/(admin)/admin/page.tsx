@@ -1,16 +1,21 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import {
-  ArrowUpRight,
   Plus,
   CheckCircle2,
-  AlertCircle,
+  AlertTriangle,
   Users,
   Dumbbell,
   ClipboardList,
   Tag as TagIcon,
+  ArrowRight,
+  Activity,
+  HeartPulse,
+  TrendingUp,
+  Clock,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -101,362 +106,443 @@ export default async function AdminDashboard() {
   const greeting = getGreeting();
 
   return (
-    <div className="relative">
-      {/* MASTHEAD */}
-      <div className="border-b border-foreground/15">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-4 flex items-center justify-between text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-          <span className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-            Ediția de azi · {formatDateLong(now)}
-          </span>
-          <span className="hidden md:inline">Jurnal de cabinet</span>
-        </div>
-      </div>
-
-      {/* HEADLINE */}
-      <section className="border-b border-foreground/10">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-10 md:py-14 grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-8">
-            <div className="font-hand text-2xl text-ochre mb-3">{greeting}</div>
-            <h1 className="font-serif text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.92] tracking-tight">
-              Astăzi ai{" "}
-              <span className="italic text-primary">{clientCount}</span>{" "}
-              pacienți activi<span className="text-muted-foreground/60">.</span>
-            </h1>
-            <p className="mt-6 text-lg text-foreground/70 max-w-xl">
-              {todayCompletions > 0
-                ? `Au finalizat ${todayCompletions} exerciții până acum. Ultima activitate: ${lastActivityRelative(
-                    recentCompletions[0]?.completedAt
-                  )}.`
-                : "Încă nimeni nu a completat un exercițiu azi. Ziua e tânără."}
-            </p>
-          </div>
-
-          <div className="col-span-12 md:col-span-4 flex md:justify-end items-start md:items-end gap-2">
-            <Link href="/admin/exercises/new">
-              <Button size="sm" className="gap-1 rounded-none">
-                <Plus className="h-3.5 w-3.5" />
-                Exercițiu
-              </Button>
-            </Link>
-            <Link href="/admin/clients/new">
-              <Button
-                size="sm"
-                variant="outline"
-                className="gap-1 rounded-none border-foreground"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Pacient
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* NUMBERS STRIP */}
-      <section className="border-b border-foreground/10">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-5">
-          <NumberCell
-            value={String(weekCompletions)}
-            label="Finalizări / 7 zile"
-            href="/admin/analytics"
-          />
-          <NumberCell
-            value={String(activePlans)}
-            label="Planuri active"
-            icon={<ClipboardList className="h-3.5 w-3.5" />}
-          />
-          <NumberCell
-            value={String(exerciseCount)}
-            label="Exerciții în bibliotecă"
-            href="/admin/exercises"
-            icon={<Dumbbell className="h-3.5 w-3.5" />}
-          />
-          <NumberCell
-            value={String(tagCount)}
-            label="Afecțiuni definite"
-            href="/admin/tags"
-            icon={<TagIcon className="h-3.5 w-3.5" />}
-          />
-          <NumberCell
-            value={String(clientCount)}
-            label="Pacienți înregistrați"
-            href="/admin/clients"
-            icon={<Users className="h-3.5 w-3.5" />}
-            last
-          />
-        </div>
-      </section>
-
-      {/* TWO-COLUMN EDITORIAL */}
-      <section className="max-w-[1400px] mx-auto px-6 md:px-10 py-12 md:py-16 grid grid-cols-12 gap-8 md:gap-12">
-        {/* LEFT — Attention needed (bulletin) */}
-        <div className="col-span-12 md:col-span-5">
-          <div className="sticky top-6">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
-                Alertă durere
-              </div>
-              <span className="h-px flex-1 bg-foreground/15" />
+    <div className="min-h-screen">
+      {/* HEADER */}
+      <header className="px-6 md:px-10 pt-8 md:pt-10 pb-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div className="text-sm text-muted-foreground">
+              {greeting} · {formatDateLong(now)}
             </div>
-            <h2 className="font-serif text-3xl md:text-4xl leading-tight mb-1">
-              Atenție aici
-            </h2>
-            <p className="text-sm text-muted-foreground mb-8">
-              Pacienți care au raportat durere ≥ 6/10 în ultimele 7 zile.
-            </p>
+            <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight">
+              Panou de cabinet
+            </h1>
+          </div>
+          <div className="flex gap-2">
+            <Link
+              href="/admin/clients/new"
+              className={cn(buttonVariants({ size: "lg" }), "rounded-full shadow-soft gap-1.5 h-10 px-5")}
+            >
+              <Plus className="h-4 w-4" /> Pacient nou
+            </Link>
+            <Link
+              href="/admin/exercises/new"
+              className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full gap-1.5 h-10 px-5")}
+            >
+              <Plus className="h-4 w-4" /> Exercițiu
+            </Link>
+          </div>
+        </div>
+      </header>
 
-            {highPainCompletions.length === 0 ? (
-              <div className="border border-foreground/15 p-6 text-sm">
-                <div className="flex items-center gap-2 text-primary mb-2">
-                  <CheckCircle2 className="h-4 w-4" />
-                  <span className="font-medium">Totul e calm</span>
+      {/* STAT CARDS */}
+      <section className="px-6 md:px-10 pb-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            icon={Users}
+            label="Pacienți activi"
+            value={clientCount}
+            sub={`${activePlans} ${activePlans === 1 ? "plan activ" : "planuri active"}`}
+            tone="primary"
+            href="/admin/clients"
+          />
+          <StatCard
+            icon={CheckCircle2}
+            label="Finalizări azi"
+            value={todayCompletions}
+            sub={`${weekCompletions} în ultimele 7 zile`}
+            tone="mint"
+          />
+          <StatCard
+            icon={Dumbbell}
+            label="Bibliotecă"
+            value={exerciseCount}
+            sub={`${tagCount} afecțiuni`}
+            tone="sky"
+            href="/admin/exercises"
+          />
+          <StatCard
+            icon={AlertTriangle}
+            label="Alerte durere"
+            value={highPainCompletions.length}
+            sub="pacienți cu durere ≥ 6/10"
+            tone="coral"
+          />
+        </div>
+      </section>
+
+      {/* TWO-COLUMN */}
+      <section className="px-6 md:px-10 pb-10">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-5">
+          {/* LEFT — attention */}
+          <div className="lg:col-span-1 bg-card rounded-3xl border shadow-soft overflow-hidden">
+            <div className="p-5 border-b border-border/60 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-coral-soft text-coral flex items-center justify-center">
+                  <AlertTriangle className="h-[18px] w-[18px]" strokeWidth={2.2} />
                 </div>
-                <p className="text-muted-foreground">
-                  Niciun semnal de durere crescută săptămâna asta.
-                </p>
+                <div>
+                  <div className="font-semibold tracking-tight">Atenție aici</div>
+                  <div className="text-[11px] text-muted-foreground">Durere ≥ 6/10</div>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-0 border-t border-foreground/15">
-                {highPainCompletions.map((c) => {
+            </div>
+            <div className="divide-y divide-border/60">
+              {highPainCompletions.length === 0 ? (
+                <div className="p-6 text-center">
+                  <div className="h-11 w-11 mx-auto rounded-full bg-mint-soft text-mint flex items-center justify-center mb-3">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                  <p className="text-sm font-medium">Totul e calm</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Niciun semnal crescut săptămâna asta.
+                  </p>
+                </div>
+              ) : (
+                highPainCompletions.map((c) => {
                   const patient =
                     c.planExercise.treatmentPlan.clientProfile.user;
                   return (
                     <Link
                       key={c.id}
                       href={`/admin/clients/${patient.id}`}
-                      className="group flex items-start gap-4 py-5 border-b border-foreground/15 hover:bg-foreground/[0.02] -mx-2 px-2 transition"
+                      className="group p-4 flex items-start gap-3 hover:bg-secondary/60 transition-colors"
                     >
-                      <div className="display-numeral text-3xl text-ochre w-12 shrink-0">
-                        {c.painLevel}
+                      <div className="h-10 w-10 rounded-xl bg-coral-soft text-coral flex flex-col items-center justify-center shrink-0">
+                        <span className="text-lg font-bold leading-none">
+                          {c.painLevel}
+                        </span>
+                        <span className="text-[9px] leading-none mt-0.5 opacity-70">
+                          /10
+                        </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-serif text-lg leading-tight">
+                        <div className="font-semibold text-sm truncate">
                           {patient.name}
                         </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {c.planExercise.exercise.title} ·{" "}
+                        <div className="text-xs text-muted-foreground truncate">
+                          {c.planExercise.exercise.title}
+                        </div>
+                        <div className="text-[11px] text-muted-foreground/80 mt-1 flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
                           {lastActivityRelative(c.completedAt)}
                         </div>
                       </div>
-                      <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition shrink-0" />
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0" />
                     </Link>
                   );
-                })}
+                })
+              )}
+            </div>
+          </div>
+
+          {/* RIGHT — activity feed */}
+          <div className="lg:col-span-2 bg-card rounded-3xl border shadow-soft overflow-hidden">
+            <div className="p-5 border-b border-border/60 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <Activity className="h-[18px] w-[18px]" strokeWidth={2.2} />
+                </div>
+                <div>
+                  <div className="font-semibold tracking-tight">Activitate recentă</div>
+                  <div className="text-[11px] text-muted-foreground">
+                    ultimele completări
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* RIGHT — Activity feed */}
-        <div className="col-span-12 md:col-span-7">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
-              Cronologie · activitate
+              <Link
+                href="/admin/analytics"
+                className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+              >
+                Analize <ArrowRight className="h-3 w-3" />
+              </Link>
             </div>
-            <span className="h-px flex-1 bg-foreground/15" />
-          </div>
-          <h2 className="font-serif text-3xl md:text-4xl leading-tight mb-8">
-            Ce s-a întâmplat recent
-          </h2>
 
-          {recentCompletions.length === 0 ? (
-            <div className="border border-foreground/15 p-10 text-center">
-              <AlertCircle className="h-6 w-6 mx-auto text-muted-foreground mb-3" />
-              <p className="font-serif text-xl mb-1">Fără activitate încă</p>
-              <p className="text-sm text-muted-foreground">
-                Pacienții tăi nu au înregistrat completări.
-              </p>
-            </div>
-          ) : (
-            <ol className="relative border-l border-foreground/15 ml-3">
-              {recentCompletions.map((c, i) => {
-                const patient =
-                  c.planExercise.treatmentPlan.clientProfile.user;
-                return (
-                  <li
-                    key={c.id}
-                    className="relative pl-8 pb-8 last:pb-0"
-                  >
-                    <span className="absolute -left-[6px] top-1.5 h-3 w-3 rounded-full bg-background border-2 border-primary" />
-                    <div className="flex items-start justify-between gap-4">
+            {recentCompletions.length === 0 ? (
+              <div className="p-10 text-center">
+                <div className="h-12 w-12 mx-auto rounded-2xl bg-secondary text-muted-foreground flex items-center justify-center mb-4">
+                  <Activity className="h-5 w-5" />
+                </div>
+                <p className="font-semibold">Fără activitate încă</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Pacienții tăi nu au înregistrat completări.
+                </p>
+              </div>
+            ) : (
+              <ul className="divide-y divide-border/60">
+                {recentCompletions.map((c) => {
+                  const patient =
+                    c.planExercise.treatmentPlan.clientProfile.user;
+                  const initials = (patient.name ?? "?")
+                    .split(" ")
+                    .map((n) => n[0])
+                    .slice(0, 2)
+                    .join("")
+                    .toUpperCase();
+                  const highPain = c.painLevel != null && c.painLevel >= 6;
+                  return (
+                    <li
+                      key={c.id}
+                      className="p-4 flex items-start gap-3 hover:bg-secondary/40 transition-colors"
+                    >
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/15 to-coral-soft text-foreground text-xs font-semibold flex items-center justify-center shrink-0">
+                        {initials}
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-mono text-[10px] text-muted-foreground mb-1">
-                          {formatTime(c.completedAt)} ·{" "}
-                          {formatShortDate(c.completedAt)}
-                        </div>
-                        <div className="font-serif text-lg leading-tight">
-                          <span className="font-semibold">{patient.name}</span>{" "}
-                          a completat{" "}
-                          <span className="italic">
+                        <div className="text-sm leading-snug">
+                          <span className="font-semibold">{patient.name}</span>
+                          <span className="text-muted-foreground"> a făcut </span>
+                          <span className="font-medium">
                             {c.planExercise.exercise.title}
                           </span>
                         </div>
-                        <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                           {c.setsCompleted != null && (
-                            <span>{c.setsCompleted} seturi</span>
-                          )}
-                          {c.repsCompleted != null && (
-                            <span>{c.repsCompleted} repetări</span>
+                            <MetaPill>
+                              {c.setsCompleted} × {c.repsCompleted ?? "?"}
+                            </MetaPill>
                           )}
                           {c.painLevel != null && (
-                            <span
-                              className={
-                                c.painLevel >= 6
-                                  ? "text-ochre font-medium"
-                                  : ""
-                              }
-                            >
-                              durere {c.painLevel}/10
-                            </span>
+                            <MetaPill tone={highPain ? "coral" : "default"}>
+                              <HeartPulse className="h-3 w-3" />
+                              {c.painLevel}/10
+                            </MetaPill>
                           )}
                           {c.difficultyFelt != null && (
-                            <span>
-                              dificultate {c.difficultyFelt}/5
-                            </span>
+                            <MetaPill>
+                              <TrendingUp className="h-3 w-3" />
+                              {c.difficultyFelt}/5
+                            </MetaPill>
                           )}
                         </div>
                       </div>
-                      <div className="font-mono text-[10px] text-muted-foreground shrink-0">
-                        #{String(recentCompletions.length - i).padStart(3, "0")}
+                      <div className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0 mt-0.5">
+                        {formatTime(c.completedAt)}
+                        <div className="text-[10px] opacity-70">
+                          {formatShortDate(c.completedAt)}
+                        </div>
                       </div>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         </div>
       </section>
 
       {/* ROSTER */}
-      <section className="border-t border-foreground/10">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12 md:py-16">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary mb-2">
-                Registru
+      <section className="px-6 md:px-10 pb-14">
+        <div className="max-w-7xl mx-auto bg-card rounded-3xl border shadow-soft overflow-hidden">
+          <div className="p-5 border-b border-border/60 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl bg-sky-soft text-sky flex items-center justify-center">
+                <Users className="h-[18px] w-[18px]" strokeWidth={2.2} />
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl leading-tight">
-                Pacienți înregistrați
-              </h2>
+              <div>
+                <div className="font-semibold tracking-tight">Pacienți</div>
+                <div className="text-[11px] text-muted-foreground">
+                  adăugați recent
+                </div>
+              </div>
             </div>
             <Link
               href="/admin/clients"
-              className="group inline-flex items-center gap-1 text-sm font-medium"
+              className="text-xs font-medium text-primary hover:underline flex items-center gap-1"
             >
-              Toți pacienții
-              <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition" />
+              Toți pacienții <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
 
           {recentClients.length === 0 ? (
-            <div className="border border-foreground/15 p-10 text-center">
-              <p className="font-serif text-xl mb-4">Registrul e gol.</p>
-              <Link href="/admin/clients/new">
-                <Button size="sm" className="rounded-none">
-                  Adaugă primul pacient
-                </Button>
+            <div className="p-10 text-center">
+              <p className="font-semibold mb-4">Niciun pacient încă.</p>
+              <Link
+                href="/admin/clients/new"
+                className={cn(buttonVariants({ size: "lg" }), "rounded-full h-10 px-5")}
+              >
+                Adaugă primul pacient
               </Link>
             </div>
           ) : (
-            <div className="border-t border-foreground/15">
-              {recentClients.map((c, i) => {
-                const plans = c.clientProfile?.assignedPlans.length ?? 0;
-                const initials = c.name
-                  ?.split(" ")
-                  .map((n) => n[0])
-                  .slice(0, 2)
-                  .join("")
-                  .toUpperCase();
-                return (
-                  <Link
-                    key={c.id}
-                    href={`/admin/clients/${c.id}`}
-                    className="group grid grid-cols-12 gap-4 items-center py-5 border-b border-foreground/15 hover:bg-foreground/[0.02] transition -mx-2 px-2"
-                  >
-                    <div className="col-span-1 font-mono text-[10px] text-muted-foreground">
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-                    <div className="col-span-1">
-                      <div className="h-9 w-9 rounded-full bg-primary/10 text-primary font-semibold text-xs flex items-center justify-center">
-                        {initials || "?"}
-                      </div>
-                    </div>
-                    <div className="col-span-5 md:col-span-6">
-                      <div className="font-serif text-lg leading-tight group-hover:text-primary transition">
-                        {c.name}
-                      </div>
-                      <div className="text-xs text-muted-foreground truncate">
-                        {c.email}
-                      </div>
-                    </div>
-                    <div className="col-span-3 md:col-span-3 text-right md:text-left">
-                      <div className="font-mono text-sm">
-                        {plans} {plans === 1 ? "plan" : "planuri"}
-                      </div>
-                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                        active
-                      </div>
-                    </div>
-                    <div className="col-span-2 md:col-span-1 flex justify-end">
-                      <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition" />
-                    </div>
-                  </Link>
-                );
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border/60">
+              <div className="md:divide-y md:divide-border/60">
+                {recentClients.slice(0, 4).map((c) => (
+                  <RosterRow key={c.id} client={c} />
+                ))}
+              </div>
+              <div className="md:divide-y md:divide-border/60 border-t md:border-t-0 divide-y divide-border/60">
+                {recentClients.slice(4).map((c) => (
+                  <RosterRow key={c.id} client={c} />
+                ))}
+              </div>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* QUICK LINKS */}
+      <section className="px-6 md:px-10 pb-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
+          <QuickLink href="/admin/exercises" icon={Dumbbell} label="Bibliotecă" sub="Exerciții video" />
+          <QuickLink href="/admin/tags" icon={TagIcon} label="Afecțiuni" sub="Categorii" />
+          <QuickLink href="/admin/clients" icon={Users} label="Pacienți" sub="Registru" />
+          <QuickLink href="/admin/analytics" icon={TrendingUp} label="Analize" sub="Aderență" />
         </div>
       </section>
     </div>
   );
 }
 
-function NumberCell({
-  value,
+/* ------------------------------------------------------------------ */
+/* Components                                                          */
+/* ------------------------------------------------------------------ */
+
+function StatCard({
+  icon: Icon,
   label,
+  value,
+  sub,
+  tone,
   href,
-  icon,
-  last = false,
 }: {
-  value: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   label: string;
+  value: number;
+  sub: string;
+  tone: "primary" | "mint" | "sky" | "coral";
   href?: string;
-  icon?: React.ReactNode;
-  last?: boolean;
 }) {
-  const content = (
-    <div
-      className={`group py-6 md:py-8 px-1 md:px-6 ${
-        !last ? "md:border-r border-foreground/10" : ""
-      } border-b md:border-b-0 border-foreground/10 h-full`}
-    >
-      <div className="flex items-baseline gap-2">
-        <div className="display-numeral text-4xl md:text-5xl">{value}</div>
-        {icon && (
-          <div className="text-muted-foreground ml-auto group-hover:text-primary transition">
-            {icon}
-          </div>
+  const toneClasses: Record<typeof tone, string> = {
+    primary: "bg-primary/10 text-primary",
+    mint: "bg-mint-soft text-mint",
+    sky: "bg-sky-soft text-sky",
+    coral: "bg-coral-soft text-coral",
+  };
+  const inner = (
+    <div className="group bg-card rounded-3xl border shadow-soft p-5 hover:shadow-soft-lg hover:border-primary/30 transition-all h-full">
+      <div className="flex items-center justify-between mb-5">
+        <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${toneClasses[tone]}`}>
+          <Icon className="h-5 w-5" strokeWidth={2.2} />
+        </div>
+        {href && (
+          <ArrowRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
         )}
       </div>
-      <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-        {label}
-      </div>
+      <div className="text-3xl font-bold tracking-tight">{value}</div>
+      <div className="mt-1 text-sm font-medium">{label}</div>
+      <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>
     </div>
   );
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? <Link href={href}>{inner}</Link> : inner;
 }
+
+function MetaPill({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "default" | "coral";
+}) {
+  const cls =
+    tone === "coral"
+      ? "bg-coral-soft text-coral"
+      : "bg-secondary text-secondary-foreground";
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${cls}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+type RosterClient = {
+  id: string;
+  name: string | null;
+  email: string;
+  clientProfile: {
+    assignedPlans: { id: string }[];
+  } | null;
+};
+
+function RosterRow({ client }: { client: RosterClient }) {
+  const plans = client.clientProfile?.assignedPlans.length ?? 0;
+  const initials =
+    client.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() ?? "?";
+  return (
+    <Link
+      href={`/admin/clients/${client.id}`}
+      className="group flex items-center gap-3 p-4 hover:bg-secondary/60 transition-colors"
+    >
+      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/15 to-coral-soft text-foreground text-xs font-semibold flex items-center justify-center shrink-0">
+        {initials}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-semibold text-sm truncate group-hover:text-primary transition-colors">
+          {client.name}
+        </div>
+        <div className="text-xs text-muted-foreground truncate">
+          {client.email}
+        </div>
+      </div>
+      <div className="text-right shrink-0">
+        <div className="text-sm font-semibold">{plans}</div>
+        <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+          {plans === 1 ? "plan" : "planuri"}
+        </div>
+      </div>
+      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0" />
+    </Link>
+  );
+}
+
+function QuickLink({
+  href,
+  icon: Icon,
+  label,
+  sub,
+}: {
+  href: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  label: string;
+  sub: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group bg-card rounded-2xl border shadow-soft p-4 flex items-center gap-3 hover:shadow-soft-lg hover:border-primary/30 transition-all"
+    >
+      <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        <Icon className="h-[18px] w-[18px]" strokeWidth={2.2} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-semibold text-sm truncate">{label}</div>
+        <div className="text-[11px] text-muted-foreground truncate">{sub}</div>
+      </div>
+      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0" />
+    </Link>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Helpers                                                             */
+/* ------------------------------------------------------------------ */
 
 function getGreeting() {
   const h = new Date().getHours();
-  if (h < 6) return "Noapte bună,";
-  if (h < 12) return "Bună dimineața,";
-  if (h < 18) return "Bună ziua,";
-  return "Bună seara,";
+  if (h < 6) return "Noapte bună";
+  if (h < 12) return "Bună dimineața";
+  if (h < 18) return "Bună ziua";
+  return "Bună seara";
 }
 
-function lastActivityRelative(d?: Date) {
+function lastActivityRelative(d?: Date | string) {
   if (!d) return "acum un moment";
   const diff = Date.now() - new Date(d).getTime();
   const m = Math.round(diff / 60000);
@@ -498,20 +584,7 @@ function formatDateLong(d: Date) {
 function formatShortDate(d: Date | string) {
   const date = new Date(d);
   return `${date.getDate()} ${
-    [
-      "ian",
-      "feb",
-      "mar",
-      "apr",
-      "mai",
-      "iun",
-      "iul",
-      "aug",
-      "sep",
-      "oct",
-      "nov",
-      "dec",
-    ][date.getMonth()]
+    ["ian", "feb", "mar", "apr", "mai", "iun", "iul", "aug", "sep", "oct", "nov", "dec"][date.getMonth()]
   }`;
 }
 

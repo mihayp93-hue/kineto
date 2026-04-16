@@ -1,14 +1,21 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Activity,
   ArrowRight,
-  ArrowUpRight,
-  Clock3,
-  Heart,
-  Leaf,
-  Star,
+  Calendar,
+  CheckCircle2,
+  ClipboardList,
+  HeartPulse,
+  LineChart,
+  MessageSquare,
+  PlayCircle,
+  ShieldCheck,
+  Sparkles,
   Stethoscope,
+  Timer,
+  Video,
 } from "lucide-react";
 
 const PRACTITIONER_NAME = "Dr. Physio";
@@ -16,188 +23,203 @@ const PRACTITIONER_TITLE = "Kinetoterapeut principal";
 const PRACTITIONER_YEARS = "12+";
 const PRACTITIONER_PATIENTS = "600+";
 const PRACTITIONER_LOCATION = "București";
-const ISSUE = "Nr. 1";
 const YEAR = new Date().getFullYear();
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* COVER — full-screen editorial opener */}
-      <CoverPage />
-
-      {/* CHAPTER 01 — Manifesto */}
-      <Manifesto />
-
-      {/* MARQUEE — condition ticker */}
-      <MarqueeBand />
-
-      {/* CHAPTER 02 — Method */}
-      <Method />
-
-      {/* CHAPTER 03 — Case Studies (horizontal scroll) */}
-      <CaseStudies />
-
-      {/* CHAPTER 04 — Features bento */}
-      <Features />
-
-      {/* CHAPTER 05 — Numbers */}
-      <Numbers />
-
-      {/* CODA — enter */}
-      <Coda />
-
-      {/* Colophon */}
-      <Colophon />
+      <SiteHeader />
+      <Hero />
+      <TrustStrip />
+      <Benefits />
+      <HowItWorks />
+      <ProgramShowcase />
+      <Practitioner />
+      <Testimonial />
+      <FaqTeaser />
+      <FinalCta />
+      <SiteFooter />
     </div>
   );
 }
 
-/* ====================================================================
-   COVER
-   ==================================================================== */
-function CoverPage() {
+/* ------------------------------------------------------------------ */
+/* Header                                                              */
+/* ------------------------------------------------------------------ */
+
+function SiteHeader() {
   return (
-    <section className="relative min-h-[92vh] overflow-hidden">
-      {/* Paper grain + subtle dot pattern */}
-      <div className="pointer-events-none absolute inset-0 bg-dots opacity-50 [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
-      <div className="pointer-events-none absolute top-20 right-10 h-[500px] w-[500px] rounded-full bg-primary/10 blur-3xl" />
-
-      {/* Top masthead */}
-      <div className="relative border-b border-foreground/20">
-        <div className="mx-auto max-w-[1400px] px-6 py-4 flex items-center justify-between text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-          <span className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            {ISSUE} · {YEAR}
+    <header className="sticky top-0 z-30 backdrop-blur-lg bg-background/70 border-b border-border/60">
+      <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="h-9 w-9 relative rounded-2xl bg-gradient-to-br from-primary to-[oklch(0.48_0.12_210)] text-primary-foreground flex items-center justify-center shadow-soft">
+            <Activity className="h-[18px] w-[18px]" strokeWidth={2.5} />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--coral)] ring-2 ring-background pulse-dot" />
+          </div>
+          <span className="font-semibold tracking-tight text-[15px]">
+            PhysioConnect
           </span>
-          <span className="hidden md:block">
-            Jurnal personal de kinetoterapie
-          </span>
-          <div className="flex items-center gap-5">
-            <Link href="/login" className="hover:text-foreground transition">
-              Cont pacient →
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Hero grid — asymmetric */}
-      <div className="relative mx-auto max-w-[1400px] px-6 pt-14 md:pt-24 pb-10 md:pb-20 grid grid-cols-12 gap-6">
-        {/* Left margin note */}
-        <aside className="hidden md:block col-span-2 pt-6">
-          <div className="sidewriter text-muted-foreground">
-            Ediția de {formatMonth()}
-          </div>
-        </aside>
-
-        {/* Headline */}
-        <div className="col-span-12 md:col-span-7">
-          <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-6">
-            Volumul 01 · Recuperare
-          </div>
-          <h1 className="font-serif leading-[0.9] tracking-tight text-[clamp(3.5rem,10vw,10rem)]">
-            Corpul
-            <br />
-            care{" "}
-            <span className="italic text-primary">
-              {" "}
-              se&nbsp;învață
-            </span>
-            <br />
-            din nou.
-          </h1>
-          <div className="mt-10 flex items-start gap-8">
-            <span className="h-px w-10 bg-foreground mt-3 shrink-0" />
-            <p className="font-serif text-xl leading-snug max-w-md text-foreground/80">
-              Un cabinet de kinetoterapie în {PRACTITIONER_LOCATION} și o
-              platformă care nu te lasă singur între ședințe.
-            </p>
-          </div>
-        </div>
-
-        {/* Right — signature block */}
-        <div className="col-span-12 md:col-span-3 md:col-start-10 flex flex-col justify-end">
-          <div className="relative border-l-2 border-foreground/80 pl-5 py-1 mb-6">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground mb-1">
-              Prescripție semnată de
-            </div>
-            <div className="font-hand text-3xl text-foreground">
-              {PRACTITIONER_NAME}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {PRACTITIONER_TITLE}
-            </div>
-          </div>
-          <Link href="/login" className="group inline-flex items-center gap-2">
-            <span className="font-medium">Intră în cont</span>
-            <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition" />
+        </Link>
+        <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+          <a href="#beneficii" className="hover:text-foreground transition-colors">Beneficii</a>
+          <a href="#cum-functioneaza" className="hover:text-foreground transition-colors">Cum funcționează</a>
+          <a href="#program" className="hover:text-foreground transition-colors">Program</a>
+          <a href="#terapeut" className="hover:text-foreground transition-colors">Terapeut</a>
+        </nav>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/login"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "hidden sm:inline-flex rounded-full h-9 px-4"
+            )}
+          >
+            Conectare
+          </Link>
+          <Link
+            href="/login"
+            className={cn(buttonVariants(), "rounded-full shadow-soft h-9 px-4")}
+          >
+            Începe recuperarea
           </Link>
         </div>
       </div>
-
-      {/* Bottom strip — index */}
-      <div className="relative mx-auto max-w-[1400px] px-6 pb-6">
-        <div className="border-t border-foreground/15 pt-4 grid grid-cols-2 md:grid-cols-5 gap-4 text-xs text-muted-foreground">
-          <IndexItem n="01" label="Manifest" />
-          <IndexItem n="02" label="Metoda" />
-          <IndexItem n="03" label="Cazuri" />
-          <IndexItem n="04" label="Platforma" />
-          <IndexItem n="05" label="Intrare" />
-        </div>
-      </div>
-    </section>
+    </header>
   );
 }
 
-function IndexItem({ n, label }: { n: string; label: string }) {
-  return (
-    <div className="flex items-baseline gap-2">
-      <span className="font-mono text-[10px] text-primary">{n}</span>
-      <span className="font-serif text-base text-foreground">{label}</span>
-    </div>
-  );
-}
+/* ------------------------------------------------------------------ */
+/* Hero                                                                */
+/* ------------------------------------------------------------------ */
 
-/* ====================================================================
-   MANIFESTO
-   ==================================================================== */
-function Manifesto() {
+function Hero() {
   return (
-    <section id="manifest" className="relative py-24 md:py-40 border-t border-foreground/10">
-      <div className="mx-auto max-w-[1400px] px-6 grid grid-cols-12 gap-6">
-        <ChapterLabel n="01" label="Manifest" />
-
-        <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <p className="font-serif text-[clamp(1.75rem,3.5vw,3rem)] leading-[1.15] text-foreground">
-            Recuperarea nu e un{" "}
-            <span className="italic text-primary">protocol</span>. Este o
-            conversație între corp și răbdare — o succesiune zilnică de
-            mișcări mici care, pe termen lung, reconstruiesc încrederea
-            pierdută după o accidentare, o operație, un episod de durere
-            cronică.
+    <section className="relative overflow-hidden bg-mesh">
+      <div className="max-w-7xl mx-auto px-5 md:px-8 py-14 md:py-24 grid lg:grid-cols-12 gap-10 items-center">
+        <div className="lg:col-span-7 space-y-7">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur px-3.5 py-1.5 text-xs font-medium text-primary border border-primary/15 shadow-soft">
+            <Sparkles className="h-3.5 w-3.5" />
+            Kinetoterapie personalizată, acasă
+          </span>
+          <h1 className="text-[clamp(2.5rem,5vw,4.25rem)] leading-[1.05] font-bold tracking-tight">
+            Recuperare care te{" "}
+            <span className="relative whitespace-nowrap">
+              <span className="relative z-10">ascultă</span>
+              <span className="absolute inset-x-0 bottom-1 h-3 bg-[var(--coral-soft)] -z-0 rounded-full" />
+            </span>
+            <br />
+            și te ține pe drum.
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+            Program video de exerciții prescris de kinetoterapeutul tău,
+            urmărit zi de zi între ședințe. Faci terapia corect, la ritmul
+            tău — iar progresul se vede.
           </p>
-
-          <div className="mt-16 grid md:grid-cols-2 gap-12">
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Ce fac
-              </div>
-              <p className="text-base leading-relaxed text-foreground/80">
-                Te evaluez în cabinet, îți construiesc un program
-                individual, îți filmez demonstrațiile exercițiilor și îți
-                urmăresc aderența prin platformă. Nu copiez planuri — le
-                scriu pentru tine.
-              </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "rounded-full shadow-soft h-12 px-6 text-[15px]"
+              )}
+            >
+              Intră în programul tău <ArrowRight className="ml-1.5 h-4 w-4" />
+            </Link>
+            <a
+              href="#cum-functioneaza"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "lg" }),
+                "rounded-full h-12 px-6 text-[15px] bg-white/60 backdrop-blur border-primary/20"
+              )}
+            >
+              Vezi cum funcționează
+            </a>
+          </div>
+          <div className="flex items-center gap-5 pt-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span>Date criptate</span>
             </div>
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Ce nu fac
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <div className="flex items-center gap-2">
+              <Video className="h-4 w-4 text-primary" />
+              <span>Video HD</span>
+            </div>
+            <span className="h-1 w-1 rounded-full bg-border" />
+            <div className="flex items-center gap-2">
+              <HeartPulse className="h-4 w-4 text-primary" />
+              <span>Fără abonament</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right visual: stacked preview cards */}
+        <div className="lg:col-span-5 relative h-[480px] md:h-[520px]">
+          {/* Blob background */}
+          <div className="absolute inset-8 blob bg-gradient-to-br from-primary/20 via-[var(--mint-soft)] to-[var(--coral-soft)] -z-0" />
+
+          {/* Card 1 — progress ring */}
+          <div className="absolute top-0 right-2 md:right-8 w-[280px] bg-card rounded-3xl p-5 shadow-soft-lg border lift-in">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-xs text-muted-foreground">Astăzi</div>
+                <div className="text-sm font-semibold">Progres program</div>
               </div>
-              <p className="text-base leading-relaxed text-foreground/80">
-                Nu lucrez cu mai mulți pacienți pe oră. Nu trimit
-                PDF-uri standard. Nu dispar între ședințe. Platforma este
-                proba că urmăresc ce faci acasă — nu doar ce faci la
-                cabinet.
-              </p>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-medium bg-mint-soft rounded-full px-2 py-0.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--mint)] pulse-dot" />
+                activ
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <MiniDial value={5} total={8} />
+              <div className="space-y-1">
+                <div className="text-3xl font-bold tracking-tight">5<span className="text-lg text-muted-foreground font-medium">/8</span></div>
+                <div className="text-xs text-muted-foreground">exerciții terminate</div>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-border/60 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <Timer className="h-3.5 w-3.5" />
+                12 min rămase
+              </div>
+              <div className="flex items-center gap-1.5 text-[var(--coral)] font-medium">
+                <HeartPulse className="h-3.5 w-3.5" />
+                seria 6
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2 — exercise */}
+          <div className="absolute bottom-6 left-0 md:left-6 w-[280px] bg-card rounded-3xl shadow-soft-lg border overflow-hidden lift-in" style={{ animationDelay: "0.1s" }}>
+            <div className="relative aspect-[16/9] bg-gradient-to-br from-primary/15 to-[var(--sky-soft)] flex items-center justify-center">
+              <div className="h-12 w-12 rounded-full bg-white/95 flex items-center justify-center shadow-soft">
+                <PlayCircle className="h-6 w-6 text-primary" strokeWidth={2} />
+              </div>
+              <span className="absolute top-3 left-3 bg-white/90 backdrop-blur rounded-full px-2.5 py-1 text-[10px] font-semibold text-foreground">
+                3 · Mobilitate umăr
+              </span>
+            </div>
+            <div className="p-4 space-y-2">
+              <div className="text-sm font-semibold">Rotații externe cu banda</div>
+              <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                <span className="inline-flex items-center gap-1">
+                  <Timer className="h-3 w-3" /> 3 min
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3 text-[var(--mint)]" /> 3 seturi × 12
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3 — streak badge */}
+          <div className="absolute top-28 left-2 md:left-2 bg-card rounded-2xl shadow-soft border px-4 py-3 flex items-center gap-3 lift-in" style={{ animationDelay: "0.2s" }}>
+            <div className="h-10 w-10 rounded-xl bg-coral-soft text-[var(--coral)] flex items-center justify-center">
+              <HeartPulse className="h-5 w-5" />
+            </div>
+            <div className="leading-tight">
+              <div className="text-lg font-bold">14 zile</div>
+              <div className="text-[11px] text-muted-foreground">serie consistență</div>
             </div>
           </div>
         </div>
@@ -206,83 +228,120 @@ function Manifesto() {
   );
 }
 
-/* ====================================================================
-   MARQUEE — conditions ticker
-   ==================================================================== */
-function MarqueeBand() {
-  const items = [
-    "Hernie de disc lombară",
-    "Post-operator genunchi",
-    "Entorsă gleznă",
-    "Durere cronică cervicală",
-    "Recuperare umăr",
-    "Accident sportiv",
-    "Scolioză",
-    "Rigiditate șold",
-    "Tendinită cotul",
-    "Post-fractură",
-  ];
-  const loop = [...items, ...items];
+function MiniDial({ value, total }: { value: number; total: number }) {
+  const pct = Math.min(100, (value / total) * 100);
+  const R = 32;
+  const C = 2 * Math.PI * R;
+  const dash = (pct / 100) * C;
   return (
-    <section className="relative border-y border-foreground/80 bg-foreground text-background py-4 overflow-hidden">
-      <div className="flex gap-12 ticker-track whitespace-nowrap">
-        {loop.map((it, i) => (
-          <span
-            key={i}
-            className="font-serif text-2xl md:text-4xl italic flex items-center gap-12"
-          >
-            {it}
-            <Star className="h-4 w-4 text-primary shrink-0" />
-          </span>
+    <div className="relative h-[76px] w-[76px]">
+      <svg viewBox="0 0 80 80" className="h-full w-full -rotate-90">
+        <circle cx="40" cy="40" r={R} fill="none" stroke="currentColor" strokeWidth="7" className="text-muted/60" />
+        <circle
+          cx="40"
+          cy="40"
+          r={R}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="7"
+          strokeLinecap="round"
+          strokeDasharray={`${dash} ${C}`}
+          className="text-primary transition-[stroke-dasharray] duration-700"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center text-sm font-bold">
+        {Math.round(pct)}%
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Trust Strip                                                         */
+/* ------------------------------------------------------------------ */
+
+function TrustStrip() {
+  const items = [
+    { label: "Pacienți recuperați", value: PRACTITIONER_PATIENTS },
+    { label: "Ani experiență", value: PRACTITIONER_YEARS },
+    { label: "Rată de aderență", value: "92%" },
+    { label: "Rating pacienți", value: "4.9" },
+  ];
+  return (
+    <section className="border-y bg-card/40">
+      <div className="max-w-7xl mx-auto px-5 md:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+        {items.map((it) => (
+          <div key={it.label} className="text-center md:text-left">
+            <div className="text-3xl md:text-4xl font-bold tracking-tight text-primary">
+              {it.value}
+            </div>
+            <div className="text-xs md:text-sm text-muted-foreground mt-1">
+              {it.label}
+            </div>
+          </div>
         ))}
       </div>
     </section>
   );
 }
 
-/* ====================================================================
-   METHOD — three chapters
-   ==================================================================== */
-function Method() {
-  const chapters = [
+/* ------------------------------------------------------------------ */
+/* Benefits                                                            */
+/* ------------------------------------------------------------------ */
+
+function Benefits() {
+  const benefits: Array<{
+    icon: typeof ClipboardList;
+    title: string;
+    body: string;
+    tone: "primary" | "coral" | "mint" | "sky";
+  }> = [
     {
-      n: "I",
-      title: "Evaluare",
-      body:
-        "Ne vedem în cabinet. Evaluez mobilitatea, forța, calitatea mișcării și discutăm istoricul tău medical. Nu e o rutină — ascult, observ, notez.",
-      margin: "45 de minute",
+      icon: ClipboardList,
+      title: "Program croit pe tine",
+      body: "Nu primești un plan generic. Exercițiile sunt alese pentru diagnosticul, stadiul și obiectivul tău.",
+      tone: "primary",
     },
     {
-      n: "II",
-      title: "Prescripție",
-      body:
-        "Construiesc un plan de exerciții exact pentru tine. Fiecare exercițiu e filmat cu adnotări pe momentele critice. Îl primești pe platformă în 24 de ore.",
-      margin: "Video cu adnotări",
+      icon: Video,
+      title: "Video cu tehnică corectă",
+      body: "Fiecare exercițiu are demonstrație video cu instrucțiuni clare. Faci mișcarea corect din prima zi.",
+      tone: "coral",
     },
     {
-      n: "III",
-      title: "Ajustare",
-      body:
-        "Văd în fiecare seară ce ai făcut, cât a durut, cât de greu ți s-a părut. Modific planul săptămânal în funcție de cum răspunde corpul tău.",
-      margin: "Săptămână de săptămână",
+      icon: LineChart,
+      title: "Progres vizibil zilnic",
+      body: "Marchezi ce ai făcut, notezi cum te simți. Terapeutul vede evoluția și ajustează planul.",
+      tone: "mint",
+    },
+    {
+      icon: MessageSquare,
+      title: "Sprijin între ședințe",
+      body: "Ai o întrebare la mijlocul săptămânii? Scrii direct în aplicație și primești răspuns.",
+      tone: "sky",
     },
   ];
   return (
-    <section id="metoda" className="relative py-24 md:py-40">
-      <div className="mx-auto max-w-[1400px] px-6">
-        <div className="grid grid-cols-12 gap-6 mb-16">
-          <ChapterLabel n="02" label="Metoda" />
-          <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <h2 className="font-serif text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95] tracking-tight">
-              Trei pași. Niciodată{" "}
-              <span className="italic text-primary">grăbit</span>.
-            </h2>
-          </div>
+    <section id="beneficii" className="py-20 md:py-28">
+      <div className="max-w-7xl mx-auto px-5 md:px-8">
+        <div className="max-w-2xl mb-14">
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            De ce PhysioConnect
+          </span>
+          <h2 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight">
+            Terapia ta, continuată și{" "}
+            <span className="text-primary">între ședințe.</span>
+          </h2>
+          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+            Cele mai bune rezultate vin din consecvență. Platforma te ajută să
+            faci exercițiile corect, la timp și să vezi că drumul spre
+            recuperare înaintează.
+          </p>
         </div>
 
-        <div className="space-y-0">
-          {chapters.map((c, i) => (
-            <ChapterRow key={c.n} {...c} reverse={i % 2 === 1} />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {benefits.map((b) => (
+            <BenefitCard key={b.title} {...b} />
           ))}
         </div>
       </div>
@@ -290,395 +349,364 @@ function Method() {
   );
 }
 
-function ChapterRow({
-  n,
+function BenefitCard({
+  icon: Icon,
   title,
   body,
-  margin,
-  reverse = false,
+  tone,
 }: {
-  n: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   title: string;
   body: string;
-  margin: string;
-  reverse?: boolean;
+  tone: "primary" | "coral" | "mint" | "sky";
 }) {
+  const iconClasses: Record<typeof tone, string> = {
+    primary: "bg-primary/10 text-primary",
+    coral: "bg-coral-soft text-coral",
+    mint: "bg-mint-soft text-mint",
+    sky: "bg-sky-soft text-sky",
+  };
   return (
-    <article
-      className={`group grid grid-cols-12 gap-6 py-10 md:py-14 border-t border-foreground/10 first:border-t-0 ${
-        reverse ? "md:[&>*:first-child]:order-2" : ""
-      }`}
-    >
-      {/* Big Roman numeral */}
-      <div className="col-span-12 md:col-span-4">
-        <div className="display-numeral text-[clamp(5rem,14vw,13rem)] text-foreground/90">
-          {n}
-        </div>
-        <div className="mt-2 font-hand text-2xl text-ochre">
-          {margin}
-        </div>
+    <div className="group bg-card rounded-3xl p-6 border border-border/60 hover:border-primary/30 hover:shadow-soft transition-all">
+      <div
+        className={`h-12 w-12 rounded-2xl flex items-center justify-center mb-5 ${iconClasses[tone]}`}
+      >
+        <Icon className="h-5 w-5" strokeWidth={2.2} />
       </div>
-
-      {/* Text block */}
-      <div className="col-span-12 md:col-span-7 md:col-start-6 flex flex-col justify-center">
-        <h3 className="font-serif text-4xl md:text-5xl mb-5 tracking-tight">
-          {title}
-        </h3>
-        <p className="text-lg leading-relaxed text-foreground/80 max-w-xl">
-          {body}
-        </p>
-      </div>
-    </article>
+      <h3 className="text-lg font-semibold tracking-tight mb-2">{title}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
+    </div>
   );
 }
 
-/* ====================================================================
-   CASE STUDIES — horizontal scroll
-   ==================================================================== */
-function CaseStudies() {
-  const cases = [
+/* ------------------------------------------------------------------ */
+/* How it works                                                        */
+/* ------------------------------------------------------------------ */
+
+function HowItWorks() {
+  const steps = [
     {
-      tag: "Caz 01 · Andreea, 34",
-      context: "Post-operator LCA genunchi",
-      duration: "4 luni",
-      quote:
-        "Am revenit la alergat în 4 luni. Faptul că aveam fiecare exercițiu video pe telefon a făcut o diferență uriașă — nu mai uitam cum se execută corect.",
-      narrative:
-        "Andreea a venit la cabinet la două săptămâni după operație, cu edem persistent și teama firească de a îndoi genunchiul. Planul inițial: 6 exerciții blânde, adnotări video pe fiecare reper critic. La săptămâna a opta — jog ușor pe iarbă. La a șaisprezecea — alergare pe pistă.",
+      n: "1",
+      title: "Consultație și evaluare",
+      body: "Ne vedem la cabinet sau online. Evaluez postura, mobilitatea, durerea — și înțeleg ce ai nevoie.",
+      icon: Stethoscope,
     },
     {
-      tag: "Caz 02 · Radu, 51",
-      context: "Durere cronică lombară",
-      duration: "7 luni",
-      quote:
-        "Platforma mă ținea responsabil. Vedeam că notez durerea în fiecare seară și aveam un grafic care chiar arăta că mă fac bine.",
-      narrative:
-        "Radu a trăit cu dureri lombare timp de trei ani. Nu un incident — o slăbiciune. Am construit un program de stabilizare progresivă a zonei centrale, ajustat săptămânal în funcție de scorul de durere pe care îl înregistra în aplicație. La luna a șaptea, dormea opt ore fără rigiditate matinală.",
+      n: "2",
+      title: "Program personalizat",
+      body: "Primești în aplicație un plan săptămânal cu exerciții video, durate și indicații clare.",
+      icon: ClipboardList,
     },
     {
-      tag: "Caz 03 · Maria, 28",
-      context: "Recuperare post-accident rutier",
-      duration: "9 luni",
-      quote:
-        "Adnotările pe video la momentul exact m-au ajutat să nu fac greșeli. Când aveam o întrebare, răspunsul venea în câteva ore.",
-      narrative:
-        "Accident de mașină cu fractură de bazin și contuzie cervicală. Programul a fost construit în etape: imobilizare controlată, mobilizare progresivă, forță, apoi revenire la activitate. Fiecare etapă a avut repere clare, filmate cu adnotări pe fiecare mișcare sensibilă.",
+      n: "3",
+      title: "Faci. Urmărești. Progresezi.",
+      body: "Marchezi fiecare exercițiu terminat. Vezi streakul, durerea, evoluția. Ajustăm împreună.",
+      icon: LineChart,
     },
   ];
   return (
-    <section id="cazuri" className="relative py-24 md:py-40 border-t border-foreground/10 bg-secondary/40">
-      <div className="mx-auto max-w-[1400px] px-6 mb-16 grid grid-cols-12 gap-6">
-        <ChapterLabel n="03" label="Cazuri" />
-        <div className="col-span-12 md:col-span-9 md:col-start-4">
-          <h2 className="font-serif text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95] tracking-tight">
-            Trei oameni.{" "}
-            <span className="italic text-primary">Trei reveniri.</span>
+    <section id="cum-functioneaza" className="py-20 md:py-28 bg-gradient-to-b from-secondary/40 to-background">
+      <div className="max-w-7xl mx-auto px-5 md:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            Cum funcționează
+          </span>
+          <h2 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight">
+            Trei pași spre recuperarea ta.
           </h2>
         </div>
-      </div>
 
-      {/* Horizontal scroller */}
-      <div className="relative">
-        <div className="no-scrollbar overflow-x-auto overflow-y-hidden snap-x snap-mandatory">
-          <div className="flex gap-6 md:gap-10 px-6 md:pl-[calc((100vw-1400px)/2+1.5rem)] md:pr-[calc((100vw-1400px)/2+1.5rem)] pb-4">
-            {cases.map((c, i) => (
-              <CaseCard key={i} index={i} {...c} />
-            ))}
-            <div className="shrink-0 w-4" />
-          </div>
-        </div>
-        <div className="mx-auto max-w-[1400px] px-6 mt-6 flex items-center justify-between text-xs text-muted-foreground">
-          <span className="font-mono">← glisează →</span>
-          <span>3 cazuri studiate</span>
+        <div className="grid md:grid-cols-3 gap-6 relative">
+          {/* dotted connector behind cards on md+ */}
+          <div className="hidden md:block absolute top-[90px] left-[16%] right-[16%] h-px border-t-2 border-dashed border-primary/20 -z-0" />
+          {steps.map((s) => (
+            <div
+              key={s.n}
+              className="relative bg-card rounded-3xl p-6 md:p-8 border shadow-soft text-center"
+            >
+              <div className="h-16 w-16 rounded-2xl mx-auto bg-gradient-to-br from-primary to-[oklch(0.48_0.12_210)] text-primary-foreground flex items-center justify-center mb-5 shadow-soft">
+                <s.icon className="h-7 w-7" strokeWidth={2.2} />
+              </div>
+              <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-coral-soft text-coral text-xs font-bold mb-3">
+                {s.n}
+              </div>
+              <h3 className="text-xl font-semibold tracking-tight mb-2">
+                {s.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {s.body}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function CaseCard({
-  index,
-  tag,
-  context,
-  duration,
-  quote,
-  narrative,
-}: {
-  index: number;
-  tag: string;
-  context: string;
-  duration: string;
-  quote: string;
-  narrative: string;
-}) {
+/* ------------------------------------------------------------------ */
+/* Program Showcase                                                    */
+/* ------------------------------------------------------------------ */
+
+function ProgramShowcase() {
+  const conditions = [
+    { label: "Durere lombară", count: "34 exerciții", tone: "primary" },
+    { label: "Umăr înghețat", count: "22 exerciții", tone: "coral" },
+    { label: "Post-operator genunchi", count: "28 exerciții", tone: "mint" },
+    { label: "Hernie de disc", count: "19 exerciții", tone: "sky" },
+    { label: "Scolioză", count: "16 exerciții", tone: "primary" },
+    { label: "Reabilitare sportivă", count: "40 exerciții", tone: "coral" },
+  ];
+  const toneClasses: Record<string, string> = {
+    primary: "bg-primary/10 text-primary",
+    coral: "bg-coral-soft text-coral",
+    mint: "bg-mint-soft text-mint",
+    sky: "bg-sky-soft text-sky",
+  };
   return (
-    <article className="snap-start shrink-0 w-[88vw] md:w-[620px] bg-card border border-foreground/15 p-8 md:p-10 rounded-sm relative">
-      {/* Corner index */}
-      <div className="absolute top-4 right-4 font-mono text-[10px] text-muted-foreground">
-        {String(index + 1).padStart(2, "0")} / 03
-      </div>
-
-      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mb-4">
-        {tag}
-      </div>
-      <h3 className="font-serif text-3xl md:text-4xl leading-tight mb-2">
-        {context}
-      </h3>
-      <div className="font-hand text-xl text-ochre mb-8">
-        Recuperare completă · {duration}
-      </div>
-
-      <div className="border-l-2 border-primary pl-5 mb-8">
-        <p className="font-serif text-xl italic leading-snug text-foreground/90">
-          &ldquo;{quote}&rdquo;
-        </p>
-      </div>
-
-      <div className="rule-ornament text-[10px] uppercase tracking-[0.2em] mb-5">
-        Cronica tratamentului
-      </div>
-
-      <p className="text-base leading-relaxed text-foreground/80">
-        {narrative}
-      </p>
-    </article>
-  );
-}
-
-/* ====================================================================
-   FEATURES — bento grid (editorial, asymmetric)
-   ==================================================================== */
-function Features() {
-  return (
-    <section id="platforma" className="relative py-24 md:py-40 border-t border-foreground/10">
-      <div className="mx-auto max-w-[1400px] px-6">
-        <div className="grid grid-cols-12 gap-6 mb-16">
-          <ChapterLabel n="04" label="Platforma" />
-          <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <h2 className="font-serif text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95] tracking-tight">
-              Instrumente cât să fie{" "}
-              <span className="italic text-primary">destul</span>.
-            </h2>
-          </div>
+    <section id="program" className="py-20 md:py-28">
+      <div className="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-12 gap-10">
+        <div className="lg:col-span-5 lg:sticky lg:top-24 self-start">
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            Afecțiuni tratate
+          </span>
+          <h2 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight">
+            Bibliotecă construită pe ani de cabinet.
+          </h2>
+          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+            Fiecare exercițiu e filmat, descris și categorizat. Selectăm din
+            bibliotecă exact ce îți trebuie ție, pentru stadiul tău actual.
+          </p>
+          <Link
+            href="/login"
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "mt-6 rounded-full shadow-soft h-11 px-5"
+            )}
+          >
+            Vezi programul tău <ArrowRight className="ml-1.5 h-4 w-4" />
+          </Link>
         </div>
 
-        {/* Asymmetric bento grid */}
-        <div className="grid grid-cols-12 gap-4 md:gap-5">
-          {/* Big feature */}
-          <div className="col-span-12 md:col-span-7 md:row-span-2 relative bg-foreground text-background rounded-sm p-8 md:p-10 overflow-hidden min-h-[320px]">
-            <div className="absolute inset-0 bg-dots opacity-15" />
-            <div className="relative h-full flex flex-col justify-between">
-              <div>
-                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/60 mb-4">
-                  Caracteristică principală
+        <div className="lg:col-span-7 grid sm:grid-cols-2 gap-3">
+          {conditions.map((c) => (
+            <div
+              key={c.label}
+              className="group bg-card rounded-2xl p-5 border border-border/60 hover:border-primary/30 hover:shadow-soft transition-all flex items-center gap-4"
+            >
+              <div
+                className={`h-11 w-11 rounded-xl flex items-center justify-center shrink-0 ${toneClasses[c.tone]}`}
+              >
+                <HeartPulse className="h-5 w-5" strokeWidth={2.2} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold tracking-tight truncate">
+                  {c.label}
                 </div>
-                <h3 className="font-serif text-4xl md:text-6xl leading-[1] mb-6">
-                  Bibliotecă video cu{" "}
-                  <span className="italic text-ochre">adnotări</span>
-                </h3>
-                <p className="text-background/80 leading-relaxed max-w-md">
-                  Fiecare exercițiu este filmat de mine, cu adnotări pe
-                  secundă exactă. Când urmărești videoul, vezi pe cronologie
-                  exact unde îți trag atenția: &ldquo;cot aici&rdquo;,
-                  &ldquo;respiră acum&rdquo;, &ldquo;nu accelera&rdquo;.
-                </p>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  {c.count}
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-sm font-serif italic text-ochre mt-10">
-                <span className="h-px w-10 bg-ochre" />
-                Funcționează pe orice telefon
-              </div>
+              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
             </div>
-          </div>
-
-          {/* Small features */}
-          <FeatureTile
-            tag="02"
-            title="Rutină zilnică"
-            body="Vezi exact ce ai de făcut azi, în ordinea pe care am scris-o eu."
-          />
-          <FeatureTile
-            tag="03"
-            title="Jurnal de durere"
-            body="Notezi scurt seară de seară: scor, dificultate, observații."
-            tone="ochre"
-          />
-          <FeatureTile
-            tag="04"
-            title="Mesagerie directă"
-            body="Întrebări scurte între ședințe — fără telefoane, fără confuzie."
-          />
-          <FeatureTile
-            tag="05"
-            title="Grafice de progres"
-            body="Vezi cum scade durerea, cât de regulat lucrezi, unde ești în plan."
-          />
-          <FeatureTile
-            tag="06"
-            title="Intimitate totală"
-            body="Datele tale medicale sunt criptate. Doar eu le văd. GDPR."
-            tone="ochre"
-          />
-          <FeatureTile
-            tag="07"
-            title="Progresie inteligentă"
-            body="Când ești gata, cresc volumul. Nu înainte. Nu arbitrar."
-          />
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function FeatureTile({
-  tag,
-  title,
-  body,
-  tone = "default",
-}: {
-  tag: string;
-  title: string;
-  body: string;
-  tone?: "default" | "ochre";
-}) {
-  const isOchre = tone === "ochre";
-  return (
-    <div
-      className={`col-span-12 md:col-span-5 ${
-        isOchre
-          ? "bg-ochre/15 border border-ochre/30"
-          : "bg-card border border-foreground/10"
-      } rounded-sm p-6 md:p-7 group hover:border-foreground/30 transition-colors relative`}
-    >
-      <div className="flex items-start justify-between mb-4">
-        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-          Cap. {tag}
-        </div>
-        <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition" />
-      </div>
-      <h3 className="font-serif text-2xl md:text-3xl mb-2 leading-tight">
-        {title}
-      </h3>
-      <p className="text-sm text-foreground/70 leading-relaxed">{body}</p>
-    </div>
-  );
-}
+/* ------------------------------------------------------------------ */
+/* Practitioner                                                        */
+/* ------------------------------------------------------------------ */
 
-/* ====================================================================
-   NUMBERS — large display
-   ==================================================================== */
-function Numbers() {
+function Practitioner() {
   return (
-    <section className="relative py-24 md:py-40 border-t border-foreground/10">
-      <div className="mx-auto max-w-[1400px] px-6">
-        <div className="grid grid-cols-12 gap-6 mb-16">
-          <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <div className="font-hand text-3xl text-ochre mb-2">
-              &mdash; în cifre
+    <section id="terapeut" className="py-20 md:py-28 bg-gradient-to-b from-background to-secondary/40">
+      <div className="max-w-6xl mx-auto px-5 md:px-8">
+        <div className="bg-card rounded-[2rem] border shadow-soft-lg overflow-hidden grid md:grid-cols-5">
+          <div className="md:col-span-2 bg-gradient-to-br from-primary via-[oklch(0.52_0.12_205)] to-[oklch(0.48_0.14_210)] p-10 flex items-center justify-center relative">
+            <div className="absolute inset-0 bg-mesh opacity-20" />
+            <div className="relative h-40 w-40 md:h-48 md:w-48 rounded-full bg-white/15 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center text-primary-foreground">
+              <Stethoscope className="h-20 w-20" strokeWidth={1.6} />
             </div>
-            <h2 className="font-serif text-[clamp(2rem,5vw,4.5rem)] leading-[0.98] tracking-tight">
-              Ce mai arată cabinetul, după{" "}
-              <span className="italic text-primary">
-                {PRACTITIONER_YEARS} ani
-              </span>
-              .
-            </h2>
           </div>
-        </div>
-
-        <div className="grid grid-cols-12 gap-8 md:gap-4 border-t border-foreground/20">
-          <BigNumber value={PRACTITIONER_PATIENTS} label="Pacienți tratați" />
-          <BigNumber value={PRACTITIONER_YEARS} label="Ani de practică" suffix="ani" />
-          <BigNumber value="97%" label="Aderență la plan" />
-          <BigNumber value="4.9" label="Scor satisfacție / 5" suffix="★" />
+          <div className="md:col-span-3 p-8 md:p-12 space-y-5">
+            <span className="inline-block text-xs font-semibold uppercase tracking-wider text-primary">
+              Cine te tratează
+            </span>
+            <div>
+              <h3 className="text-3xl font-bold tracking-tight">
+                {PRACTITIONER_NAME}
+              </h3>
+              <p className="text-muted-foreground mt-1">
+                {PRACTITIONER_TITLE} · {PRACTITIONER_LOCATION}
+              </p>
+            </div>
+            <p className="text-[15px] leading-relaxed text-foreground/80">
+              Lucrez de peste {PRACTITIONER_YEARS} ani cu pacienți care au
+              nevoie de recuperare după accidentări, intervenții sau dureri
+              cronice. Cred în progres constant, mișcare blândă și în a asculta
+              corpul pacientului.
+            </p>
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/60">
+              <StatCell value={PRACTITIONER_PATIENTS} label="Pacienți" />
+              <StatCell value={PRACTITIONER_YEARS} label="Ani" />
+              <StatCell value="4.9" label="Rating" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function BigNumber({
-  value,
-  label,
-  suffix,
-}: {
-  value: string;
-  label: string;
-  suffix?: string;
-}) {
+function StatCell({ value, label }: { value: string; label: string }) {
   return (
-    <div className="col-span-6 md:col-span-3 py-10 md:py-16 border-b border-foreground/20 md:border-b-0 md:border-r last:border-r-0 md:pr-4">
-      <div className="flex items-start gap-2">
-        <div className="display-numeral text-[clamp(4rem,9vw,8rem)] text-foreground">
-          {value}
-        </div>
-        {suffix && (
-          <div className="font-serif text-lg text-muted-foreground mt-3">
-            {suffix}
-          </div>
-        )}
-      </div>
-      <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-        {label}
-      </div>
+    <div>
+      <div className="text-2xl font-bold tracking-tight text-primary">{value}</div>
+      <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
     </div>
   );
 }
 
-/* ====================================================================
-   CODA — closing CTA
-   ==================================================================== */
-function Coda() {
-  return (
-    <section className="relative py-20 md:py-32 border-t border-foreground/10 overflow-hidden">
-      <div className="pointer-events-none absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-primary/15 blur-3xl" />
-      <div className="pointer-events-none absolute -top-20 -right-20 h-[400px] w-[400px] rounded-full bg-ochre/20 blur-3xl" />
+/* ------------------------------------------------------------------ */
+/* Testimonial                                                         */
+/* ------------------------------------------------------------------ */
 
-      <div className="mx-auto max-w-[1400px] px-6 relative grid grid-cols-12 gap-6">
-        <div className="col-span-12 md:col-span-2">
-          <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
-            Coda · 05
+function Testimonial() {
+  return (
+    <section className="py-20 md:py-28">
+      <div className="max-w-4xl mx-auto px-5 md:px-8 text-center">
+        <div className="inline-flex items-center gap-1 mb-6">
+          {[...Array(5)].map((_, i) => (
+            <span key={i} className="text-[var(--coral)] text-xl">
+              ★
+            </span>
+          ))}
+        </div>
+        <blockquote className="text-2xl md:text-[2rem] leading-snug font-semibold tracking-tight">
+          „După hernia de disc credeam că nu mai pot alerga. Cu programul din
+          aplicație, exercițiile zilnice și mesajele cu dr. Physio, în 3 luni
+          am revenit la ritmul dinainte. Nu m-am simțit niciodată singură în
+          procesul ăsta.&rdquo;
+        </blockquote>
+        <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-coral-soft to-primary/20 flex items-center justify-center font-semibold">
+            MA
+          </div>
+          <div className="text-left">
+            <div className="font-semibold text-sm">Maria A.</div>
+            <div className="text-xs text-muted-foreground">
+              Recuperare hernie L4-L5 · 34 ani
+            </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
 
-        <div className="col-span-12 md:col-span-10">
-          <h2 className="font-serif text-[clamp(3rem,9vw,9rem)] leading-[0.9] tracking-tight mb-10">
-            Hai să începem.
+/* ------------------------------------------------------------------ */
+/* FAQ Teaser                                                          */
+/* ------------------------------------------------------------------ */
+
+function FaqTeaser() {
+  const items = [
+    {
+      q: "Am nevoie de echipament special?",
+      a: "Cele mai multe exerciții se fac doar cu greutatea corpului. Unele folosesc o bandă elastică sau minge moale — le poți lua de oriunde.",
+    },
+    {
+      q: "Cât durează un program zilnic?",
+      a: "Între 15 și 35 de minute, în funcție de faza recuperării. Planul e făcut să încapă în ziua ta, nu invers.",
+    },
+    {
+      q: "Pot să-i scriu terapeutului între ședințe?",
+      a: "Da. Ai chat direct în aplicație. Răspund în aceeași zi la întrebări legate de exerciții, durere sau tehnică.",
+    },
+    {
+      q: "Platforma înlocuiește ședințele fizice?",
+      a: "Nu. E pentru continuitate între ședințe. Evaluările și ajustările importante le facem față-n față (sau online, când nu se poate altfel).",
+    },
+  ];
+  return (
+    <section className="py-20 md:py-28 bg-secondary/40">
+      <div className="max-w-4xl mx-auto px-5 md:px-8">
+        <div className="text-center mb-12">
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            Întrebări frecvente
+          </span>
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight">
+            Ce vor să știe pacienții, înainte de prima ședință.
           </h2>
-
-          <div className="grid md:grid-cols-2 gap-10 max-w-4xl">
-            <div className="border-t-2 border-foreground pt-6">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Sunt deja pacient
+        </div>
+        <div className="space-y-3">
+          {items.map((it) => (
+            <details
+              key={it.q}
+              className="group bg-card rounded-2xl border border-border/60 open:shadow-soft open:border-primary/30 transition-all"
+            >
+              <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4">
+                <span className="font-semibold text-[15px]">{it.q}</span>
+                <span className="h-7 w-7 rounded-full bg-secondary flex items-center justify-center text-primary transition-transform group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <div className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">
+                {it.a}
               </div>
-              <p className="text-foreground/80 leading-relaxed mb-6">
-                Intră direct în cont pentru a-ți vedea planul de azi,
-                înregistra completările și comunica cu mine.
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Final CTA                                                           */
+/* ------------------------------------------------------------------ */
+
+function FinalCta() {
+  return (
+    <section className="py-20 md:py-28">
+      <div className="max-w-6xl mx-auto px-5 md:px-8">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary via-[oklch(0.52_0.12_205)] to-[oklch(0.48_0.14_210)] text-primary-foreground p-10 md:p-16 shadow-soft-lg">
+          <div className="absolute -top-20 -right-20 h-72 w-72 blob bg-white/10" />
+          <div className="absolute -bottom-16 -left-16 h-56 w-56 blob bg-[var(--coral)]/30" />
+          <div className="relative grid md:grid-cols-3 gap-8 items-end">
+            <div className="md:col-span-2 space-y-4">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
+                Gata să reîncepi recuperarea{" "}
+                <span className="underline decoration-[var(--coral)] decoration-4 underline-offset-4">
+                  cum trebuie
+                </span>
+                ?
+              </h2>
+              <p className="text-primary-foreground/85 text-lg max-w-xl">
+                Programează prima evaluare. Primești acces la platformă imediat
+                după.
               </p>
-              <Link href="/login">
-                <Button size="lg" className="gap-2 h-12 px-6 rounded-none">
-                  Accesează cont
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
             </div>
-
-            <div className="border-t-2 border-ochre pt-6">
-              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
-                Vreau o evaluare
-              </div>
-              <p className="text-foreground/80 leading-relaxed mb-6">
-                Programează o primă ședință la cabinet. Durează 45 de minute
-                și îmi oferă tot ce am nevoie pentru a construi planul.
-              </p>
-              <a href="mailto:contact@physioconnect.ro">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="gap-2 h-12 px-6 rounded-none border-foreground"
-                >
-                  Scrie-mi un email
-                  <ArrowUpRight className="h-4 w-4" />
-                </Button>
+            <div className="flex md:flex-col gap-3 md:items-end">
+              <Link
+                href="/login"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "rounded-full bg-white text-primary hover:bg-white/90 shadow-soft h-12 px-7 text-[15px] font-semibold"
+                )}
+              >
+                Programează-te <ArrowRight className="ml-1.5 h-4 w-4" />
+              </Link>
+              <a
+                href="#beneficii"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "rounded-full h-12 px-7 text-[15px] bg-white/10 backdrop-blur border-white/30 text-primary-foreground hover:bg-white/20 hover:text-primary-foreground"
+                )}
+              >
+                Mai multe detalii
               </a>
             </div>
           </div>
@@ -688,104 +716,54 @@ function Coda() {
   );
 }
 
-/* ====================================================================
-   COLOPHON — footer
-   ==================================================================== */
-function Colophon() {
-  return (
-    <footer className="relative border-t-2 border-foreground">
-      <div className="mx-auto max-w-[1400px] px-6 py-10 grid grid-cols-12 gap-6 text-xs">
-        <div className="col-span-12 md:col-span-4 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-[0.85rem] bg-gradient-to-br from-primary to-[oklch(0.35_0.07_155)] text-primary-foreground flex items-center justify-center relative">
-            <Activity className="h-4 w-4" />
-            <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-ochre ring-2 ring-background" />
-          </div>
-          <div>
-            <div className="font-serif text-base leading-none">
-              PhysioConnect
-            </div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
-              Cabinet personal · {PRACTITIONER_LOCATION}
-            </div>
-          </div>
-        </div>
+/* ------------------------------------------------------------------ */
+/* Footer                                                              */
+/* ------------------------------------------------------------------ */
 
-        <div className="col-span-6 md:col-span-3">
-          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+function SiteFooter() {
+  return (
+    <footer className="border-t bg-card/40">
+      <div className="max-w-7xl mx-auto px-5 md:px-8 py-12 grid md:grid-cols-4 gap-8">
+        <div className="md:col-span-2 space-y-3">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="h-9 w-9 rounded-2xl bg-gradient-to-br from-primary to-[oklch(0.48_0.12_210)] text-primary-foreground flex items-center justify-center shadow-soft">
+              <Activity className="h-[18px] w-[18px]" strokeWidth={2.5} />
+            </div>
+            <span className="font-semibold tracking-tight">PhysioConnect</span>
+          </Link>
+          <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
+            Platformă de kinetoterapie construită în jurul continuității
+            dintre ședințe.
+          </p>
+        </div>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            Platformă
+          </div>
+          <ul className="space-y-2 text-sm">
+            <li><a href="#beneficii" className="hover:text-primary transition-colors">Beneficii</a></li>
+            <li><a href="#cum-functioneaza" className="hover:text-primary transition-colors">Cum funcționează</a></li>
+            <li><a href="#program" className="hover:text-primary transition-colors">Program</a></li>
+            <li><Link href="/login" className="hover:text-primary transition-colors">Conectare</Link></li>
+          </ul>
+        </div>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
             Cabinet
           </div>
-          <div className="space-y-1.5 text-foreground/80">
-            <div className="flex items-center gap-2">
-              <Stethoscope className="h-3 w-3" />
-              {PRACTITIONER_NAME}
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock3 className="h-3 w-3" />
-              Luni–Vineri, 09–19
-            </div>
-            <div className="flex items-center gap-2">
-              <Heart className="h-3 w-3" />
-              Evaluare inițială 45 min
-            </div>
-          </div>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5" /> Luni – Vineri</li>
+            <li className="flex items-center gap-2"><Stethoscope className="h-3.5 w-3.5" /> {PRACTITIONER_LOCATION}</li>
+            <li className="flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5" /> Chat în aplicație</li>
+          </ul>
         </div>
-
-        <div className="col-span-6 md:col-span-2">
-          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
-            Legal
-          </div>
-          <div className="space-y-1.5 text-foreground/80">
-            <div>Confidențialitate</div>
-            <div>Termeni</div>
-            <div>GDPR</div>
-          </div>
-        </div>
-
-        <div className="col-span-12 md:col-span-3 md:text-right flex md:flex-col items-start md:items-end gap-2 justify-between">
-          <div className="font-hand text-2xl text-foreground/80">
-            &mdash; până data viitoare.
-          </div>
-          <div className="text-[10px] text-muted-foreground">
-            &copy; {YEAR} · {ISSUE}
-          </div>
+      </div>
+      <div className="border-t border-border/60">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span>© {YEAR} PhysioConnect · Cabinet {PRACTITIONER_NAME}</span>
+          <span>Made with care in {PRACTITIONER_LOCATION}</span>
         </div>
       </div>
     </footer>
   );
-}
-
-/* ====================================================================
-   SHARED
-   ==================================================================== */
-function ChapterLabel({ n, label }: { n: string; label: string }) {
-  return (
-    <aside className="col-span-12 md:col-span-3 md:sticky md:top-6 md:self-start">
-      <div className="border-l-2 border-primary pl-4 py-1">
-        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
-          Capitolul
-        </div>
-        <div className="display-numeral text-5xl mt-2">{n}</div>
-        <div className="font-serif text-lg italic mt-1">{label}</div>
-      </div>
-    </aside>
-  );
-}
-
-function formatMonth() {
-  const months = [
-    "ianuarie",
-    "februarie",
-    "martie",
-    "aprilie",
-    "mai",
-    "iunie",
-    "iulie",
-    "august",
-    "septembrie",
-    "octombrie",
-    "noiembrie",
-    "decembrie",
-  ];
-  const d = new Date();
-  return `${months[d.getMonth()]} ${d.getFullYear()}`;
 }

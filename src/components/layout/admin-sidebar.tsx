@@ -21,12 +21,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navItems = [
-  { num: "01", href: "/admin", label: "Astăzi", icon: Home },
-  { num: "02", href: "/admin/clients", label: "Pacienți", icon: Users },
-  { num: "03", href: "/admin/exercises", label: "Bibliotecă", icon: Dumbbell },
-  { num: "04", href: "/admin/tags", label: "Afecțiuni", icon: TagIcon },
-  { num: "05", href: "/admin/analytics", label: "Analize", icon: BarChart3 },
-  { num: "06", href: "/admin/settings", label: "Setări", icon: Settings },
+  { href: "/admin", label: "Astăzi", icon: Home },
+  { href: "/admin/clients", label: "Pacienți", icon: Users },
+  { href: "/admin/exercises", label: "Bibliotecă", icon: Dumbbell },
+  { href: "/admin/tags", label: "Afecțiuni", icon: TagIcon },
+  { href: "/admin/analytics", label: "Analize", icon: BarChart3 },
+  { href: "/admin/settings", label: "Setări", icon: Settings },
 ];
 
 export function AdminSidebar() {
@@ -34,7 +34,6 @@ export function AdminSidebar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  // Close drawer on route change
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -53,18 +52,18 @@ export function AdminSidebar() {
 
   const nav = (
     <>
-      <div className="p-6 border-b flex items-center justify-between">
+      <div className="p-5 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="h-9 w-9 relative rounded-[0.85rem] bg-gradient-to-br from-primary to-[oklch(0.35_0.07_155)] text-primary-foreground flex items-center justify-center shadow-sm">
-            <Activity className="h-4 w-4" />
-            <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--ochre)] ring-2 ring-sidebar" />
+          <div className="h-10 w-10 relative rounded-2xl bg-gradient-to-br from-primary to-[oklch(0.48_0.12_210)] text-primary-foreground flex items-center justify-center shadow-soft">
+            <Activity className="h-5 w-5" strokeWidth={2.5} />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--coral)] ring-2 ring-sidebar pulse-dot" />
           </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-base font-bold tracking-tight">
+          <div className="flex flex-col leading-tight">
+            <span className="text-[15px] font-semibold tracking-tight">
               PhysioConnect
             </span>
-            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground mt-0.5">
-              Cabinet · Admin
+            <span className="text-[11px] text-muted-foreground">
+              Cabinet
             </span>
           </div>
         </Link>
@@ -77,12 +76,7 @@ export function AdminSidebar() {
         </button>
       </div>
 
-      <div className="px-6 pt-6 pb-2">
-        <div className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted-foreground">
-          Index
-        </div>
-      </div>
-      <nav className="flex-1 px-3 pb-4 overflow-y-auto">
+      <nav className="flex-1 px-3 pb-4 overflow-y-auto space-y-1">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -92,46 +86,29 @@ export function AdminSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "group flex items-center gap-3 px-3 py-3 border-b border-foreground/5 last:border-b-0 transition-colors relative",
+                "group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
                 isActive
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-soft"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
               )}
             >
-              {isActive && (
-                <span className="absolute left-0 top-3 bottom-3 w-0.5 bg-primary rounded-full" />
-              )}
-              <span
-                className={cn(
-                  "font-mono text-[10px] shrink-0 w-5",
-                  isActive ? "text-primary" : "text-muted-foreground/60"
-                )}
-              >
-                {item.num}
-              </span>
               <item.icon
                 className={cn(
-                  "h-4 w-4 shrink-0",
-                  isActive ? "text-primary" : ""
+                  "h-[18px] w-[18px] shrink-0",
+                  isActive ? "" : "text-muted-foreground/80"
                 )}
+                strokeWidth={isActive ? 2.4 : 2}
               />
-              <span
-                className={cn(
-                  "font-serif text-base leading-none",
-                  isActive ? "italic" : ""
-                )}
-              >
-                {item.label}
-              </span>
+              <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t">
+      <div className="p-4 border-t border-border/60">
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-muted-foreground"
+          className="w-full justify-start gap-3 text-muted-foreground rounded-xl"
           onClick={handleLogout}
         >
           <LogOut className="h-4 w-4" />
@@ -153,9 +130,8 @@ export function AdminSidebar() {
           <Menu className="h-5 w-5" />
         </button>
         <Link href="/" className="flex items-center gap-2">
-          <div className="h-7 w-7 relative rounded-lg bg-gradient-to-br from-primary to-[oklch(0.35_0.07_155)] text-primary-foreground flex items-center justify-center">
-            <Activity className="h-3.5 w-3.5" />
-            <span className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[var(--ochre)] ring-2 ring-sidebar" />
+          <div className="h-8 w-8 relative rounded-xl bg-gradient-to-br from-primary to-[oklch(0.48_0.12_210)] text-primary-foreground flex items-center justify-center">
+            <Activity className="h-4 w-4" strokeWidth={2.5} />
           </div>
           <span className="font-semibold tracking-tight text-sm">
             PhysioConnect

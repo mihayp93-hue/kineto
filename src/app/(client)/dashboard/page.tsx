@@ -5,13 +5,17 @@ import Link from "next/link";
 import {
   CheckCircle2,
   Play,
-  ArrowUpRight,
-  Leaf,
-  Heart,
   Flame,
+  HeartPulse,
+  Sparkles,
+  Clock,
+  ArrowRight,
+  Stethoscope,
+  Calendar,
 } from "lucide-react";
 import { getVideoThumbnail } from "@/lib/video-url";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +57,6 @@ export default async function ClientDashboard() {
   const completionRate = total > 0 ? Math.round((todayDone / total) * 100) : 0;
   const allDone = total > 0 && todayDone === total;
 
-  // Weekly rhythm — count completions per day, last 7 days
   const weekData = buildWeekData(
     allExercises.flatMap((pe) => pe.completions)
   );
@@ -66,129 +69,135 @@ export default async function ClientDashboard() {
     profile.assignedPlans[0]?.createdBy?.name ?? "Dr. Physio";
 
   return (
-    <div>
-      {/* MASTHEAD */}
-      <div className="border-b border-foreground/15">
-        <div className="max-w-[1100px] mx-auto px-6 md:px-10 py-4 flex items-center justify-between text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-          <span className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Prescripție de azi · {formatDateLong(new Date())}
-          </span>
-          <span className="hidden md:inline">Recuperare personalizată</span>
-        </div>
-      </div>
+    <div className="min-h-screen">
+      {/* HERO */}
+      <section className="px-5 md:px-10 pt-8 md:pt-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary via-[oklch(0.52_0.12_205)] to-[oklch(0.5_0.13_220)] text-primary-foreground shadow-soft-lg">
+            <div className="absolute -top-24 -right-16 h-72 w-72 blob bg-white/10" />
+            <div className="absolute -bottom-16 -left-20 h-56 w-56 blob bg-[var(--coral)]/30" />
 
-      {/* PRESCRIPTION HEADER */}
-      <section className="border-b border-foreground/10">
-        <div className="max-w-[1100px] mx-auto px-6 md:px-10 py-10 md:py-14 grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-8">
-            <div className="font-hand text-2xl text-ochre mb-3">{greeting}</div>
-            <h1 className="font-serif text-[clamp(2.5rem,6vw,5rem)] leading-[0.92] tracking-tight">
-              {allDone ? (
-                <>
-                  Astăzi ai{" "}
-                  <span className="italic text-primary">terminat</span>. Bravo,{" "}
-                  {firstName}.
-                </>
-              ) : total === 0 ? (
-                <>Nimic pe azi, {firstName}.</>
-              ) : todayDone === 0 ? (
-                <>
-                  {firstName},{" "}
-                  <span className="italic text-primary">începem</span>?
-                </>
-              ) : (
-                <>
-                  Încă{" "}
-                  <span className="italic text-primary">
-                    {total - todayDone}
-                  </span>{" "}
-                  de exerciții.
-                </>
+            <div className="relative p-6 md:p-10 grid md:grid-cols-[1fr_auto] gap-8 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-3 py-1 text-xs font-medium mb-4">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  {greeting}, {firstName}
+                </div>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+                  {allDone ? (
+                    <>Ai terminat pe azi. Odihnă activă ✨</>
+                  ) : total === 0 ? (
+                    <>Niciun exercițiu programat</>
+                  ) : todayDone === 0 ? (
+                    <>Gata să începem sesiunea?</>
+                  ) : (
+                    <>
+                      Încă {total - todayDone}{" "}
+                      {total - todayDone === 1 ? "exercițiu" : "exerciții"} de făcut
+                    </>
+                  )}
+                </h1>
+                <p className="mt-3 text-primary-foreground/80 text-[15px] max-w-md leading-relaxed">
+                  {allDone
+                    ? "Toate bifate. Mișcare ușoară până mâine."
+                    : total === 0
+                    ? "Terapeutul tău îți va atribui curând un plan."
+                    : `Programul a fost scris de ${therapistName}. Fiecare exercițiu are un video cu îndrumări.`}
+                </p>
+
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  {total > 0 && !allDone && (
+                    <Link
+                      href="/dashboard/exercises"
+                      className={cn(
+                        buttonVariants(),
+                        "rounded-full bg-white text-primary hover:bg-white/90 shadow-soft h-11 px-6 font-semibold"
+                      )}
+                    >
+                      Începe sesiunea <ArrowRight className="ml-1.5 h-4 w-4" />
+                    </Link>
+                  )}
+                  <StreakBadge streak={streak} />
+                </div>
+              </div>
+
+              {/* Progress ring */}
+              {total > 0 && (
+                <div className="flex justify-center md:justify-end">
+                  <ProgressDial
+                    rate={completionRate}
+                    done={todayDone}
+                    total={total}
+                  />
+                </div>
               )}
-            </h1>
-            <p className="mt-6 text-lg text-foreground/70 max-w-xl">
-              {allDone
-                ? "Toate exercițiile sunt bifate. Odihnă bună și ne vedem mâine."
-                : total === 0
-                ? "Nu ai exerciții programate pentru azi. Terapeutul îți va actualiza planul."
-                : `Programul a fost scris de ${therapistName}. Fiecare exercițiu are un video cu îndrumări pe secundă exactă.`}
-            </p>
-          </div>
-
-          {/* Progress dial */}
-          {total > 0 && (
-            <div className="col-span-12 md:col-span-4 flex items-center md:justify-end">
-              <ProgressDial rate={completionRate} done={todayDone} total={total} />
             </div>
-          )}
+          </div>
         </div>
       </section>
 
       {/* WEEKLY RHYTHM */}
-      <section className="border-b border-foreground/10">
-        <div className="max-w-[1100px] mx-auto px-6 md:px-10 py-10">
-          <div className="grid grid-cols-12 gap-6 items-center">
-            <div className="col-span-12 md:col-span-4">
-              <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary mb-2">
-                Ritmul săptămânii
+      <section className="px-5 md:px-10 pt-6">
+        <div className="max-w-5xl mx-auto bg-card rounded-3xl border shadow-soft p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl bg-mint-soft text-mint flex items-center justify-center">
+                <Calendar className="h-[18px] w-[18px]" strokeWidth={2.2} />
               </div>
-              <div className="flex items-end gap-3">
-                <div className="display-numeral text-5xl md:text-6xl">
-                  {streak}
-                </div>
-                <div className="pb-2">
-                  <div className="font-serif text-lg leading-tight">
-                    {streak === 1 ? "zi" : "zile"} la rând
-                  </div>
-                  <div className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Flame className="h-3 w-3 text-ochre" />
-                    serie activă
-                  </div>
+              <div>
+                <div className="font-semibold tracking-tight">Săptămâna ta</div>
+                <div className="text-[11px] text-muted-foreground">
+                  ultimele 7 zile
                 </div>
               </div>
             </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold tracking-tight">{streak}</div>
+              <div className="text-[11px] text-muted-foreground flex items-center gap-1 justify-end">
+                <Flame className="h-3 w-3 text-coral" />
+                {streak === 1 ? "zi" : "zile"} consecutiv
+              </div>
+            </div>
+          </div>
 
-            <div className="col-span-12 md:col-span-8">
-              <div className="grid grid-cols-7 gap-2 md:gap-3">
-                {weekData.map((d, i) => (
-                  <DayBar key={i} {...d} />
-                ))}
-              </div>
-              <div className="mt-3 grid grid-cols-7 gap-2 md:gap-3 text-center font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
-                {weekData.map((d, i) => (
-                  <div key={i}>{d.label}</div>
-                ))}
-              </div>
-            </div>
+          <div className="grid grid-cols-7 gap-2">
+            {weekData.map((d, i) => (
+              <DayCell key={i} {...d} />
+            ))}
           </div>
         </div>
       </section>
 
       {/* PRESCRIPTION LIST */}
       {profile.assignedPlans.map((plan) => (
-        <section key={plan.id} className="border-b border-foreground/10">
-          <div className="max-w-[1100px] mx-auto px-6 md:px-10 py-10 md:py-14">
-            <div className="flex items-end justify-between mb-8">
+        <section key={plan.id} className="px-5 md:px-10 pt-6 pb-10">
+          <div className="max-w-5xl mx-auto bg-card rounded-3xl border shadow-soft overflow-hidden">
+            <div className="p-6 border-b border-border/60 flex items-start justify-between gap-4">
               <div>
-                <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary mb-2">
-                  Programul · {plan.name}
+                <div className="text-[11px] font-medium text-primary uppercase tracking-wider">
+                  Programul tău
                 </div>
-                <h2 className="font-serif text-3xl md:text-5xl leading-tight">
-                  Astăzi
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight mt-0.5">
+                  {plan.name}
                 </h2>
                 {plan.description && (
-                  <p className="mt-2 text-sm text-muted-foreground max-w-md">
+                  <p className="text-sm text-muted-foreground mt-1 max-w-lg">
                     {plan.description}
                   </p>
                 )}
               </div>
-              <div className="font-hand text-3xl text-ochre hidden md:block">
-                {todayDone}/{total}
+              <div className="text-right shrink-0">
+                <div className="text-2xl font-bold tracking-tight">
+                  <span className="text-primary">{todayDone}</span>
+                  <span className="text-muted-foreground text-lg font-medium">
+                    /{total}
+                  </span>
+                </div>
+                <div className="text-[11px] text-muted-foreground">azi</div>
               </div>
             </div>
 
-            <ol className="border-t border-foreground/15">
+            <ol className="divide-y divide-border/60">
               {plan.exercises.map((pe, i) => {
                 const done = pe.completions.some(isToday);
                 const thumb =
@@ -197,166 +206,122 @@ export default async function ClientDashboard() {
                 const lastPain = pe.completions[0]?.painLevel;
 
                 return (
-                  <li
-                    key={pe.id}
-                    className="border-b border-foreground/15"
-                  >
+                  <li key={pe.id}>
                     <Link
                       href={`/dashboard/exercises/${pe.id}`}
-                      className={`group grid grid-cols-12 gap-4 items-center py-5 md:py-6 px-2 -mx-2 transition ${
+                      className={`group flex items-center gap-4 p-4 md:p-5 transition-colors ${
                         done
-                          ? "bg-primary/[0.04]"
-                          : "hover:bg-foreground/[0.02]"
+                          ? "bg-mint-soft/40"
+                          : "hover:bg-secondary/40"
                       }`}
                     >
-                      {/* Number */}
-                      <div className="col-span-1 md:col-span-1">
-                        <div
-                          className={`font-mono text-sm ${
-                            done
-                              ? "text-primary line-through"
-                              : "text-muted-foreground"
-                          }`}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </div>
+                      {/* Index badge */}
+                      <div
+                        className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+                          done
+                            ? "bg-mint text-white"
+                            : "bg-secondary text-muted-foreground"
+                        }`}
+                      >
+                        {done ? <CheckCircle2 className="h-4 w-4" /> : i + 1}
                       </div>
 
                       {/* Thumbnail */}
-                      <div className="col-span-2 md:col-span-2">
-                        <div className="relative w-full aspect-[4/3] md:aspect-video rounded-sm overflow-hidden bg-muted">
-                          {thumb && (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={thumb}
-                              alt={pe.exercise.title}
-                              className={`w-full h-full object-cover ${
-                                done ? "opacity-60" : ""
-                              }`}
-                            />
-                          )}
-                          <div
-                            className={`absolute inset-0 flex items-center justify-center ${
-                              done
-                                ? "bg-primary/70 text-primary-foreground"
-                                : "bg-black/20 text-white group-hover:bg-black/40"
-                            } transition`}
-                          >
-                            {done ? (
-                              <CheckCircle2 className="h-5 w-5" />
-                            ) : (
-                              <Play className="h-5 w-5 fill-current" />
-                            )}
+                      <div className="relative w-24 md:w-32 aspect-video rounded-xl overflow-hidden bg-muted shrink-0 shadow-soft">
+                        {thumb && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={thumb}
+                            alt={pe.exercise.title}
+                            className={`w-full h-full object-cover ${
+                              done ? "opacity-70" : ""
+                            }`}
+                          />
+                        )}
+                        {!done && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/25 transition-colors">
+                            <div className="h-9 w-9 rounded-full bg-white/95 flex items-center justify-center shadow-soft">
+                              <Play className="h-4 w-4 text-primary fill-primary" />
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
 
-                      {/* Title + prescription */}
-                      <div className="col-span-9 md:col-span-6 min-w-0">
+                      {/* Title + meta */}
+                      <div className="flex-1 min-w-0">
                         <div
-                          className={`font-serif text-xl md:text-2xl leading-tight ${
-                            done ? "text-foreground/60" : "group-hover:text-primary"
-                          } transition`}
+                          className={`font-semibold text-[15px] md:text-base tracking-tight truncate ${
+                            done ? "text-muted-foreground" : ""
+                          }`}
                         >
                           {pe.exercise.title}
                         </div>
-                        <div className="mt-1.5 font-mono text-[11px] text-muted-foreground uppercase tracking-wider">
-                          {[
-                            pe.sets && `${pe.sets} × `,
-                            pe.reps && `${pe.reps} rep`,
-                            pe.holdSeconds && `${pe.holdSeconds}s hold`,
-                            pe.frequencyPerWeek &&
-                              ` · ${pe.frequencyPerWeek}/săpt`,
-                          ]
-                            .filter(Boolean)
-                            .join("")}
+                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                          {(pe.sets || pe.reps) && (
+                            <MetaPill>
+                              <Clock className="h-3 w-3" />
+                              {pe.sets ? `${pe.sets}×` : ""}
+                              {pe.reps ?? ""}
+                              {pe.holdSeconds ? ` · ${pe.holdSeconds}s` : ""}
+                            </MetaPill>
+                          )}
+                          {pe.frequencyPerWeek && (
+                            <MetaPill>
+                              {pe.frequencyPerWeek}/săpt
+                            </MetaPill>
+                          )}
+                          {done && lastPain != null && (
+                            <MetaPill tone={lastPain >= 6 ? "coral" : "mint"}>
+                              <HeartPulse className="h-3 w-3" />
+                              durere {lastPain}/10
+                            </MetaPill>
+                          )}
                         </div>
-                        {pe.notes && (
-                          <p className="mt-2 font-hand text-base text-ochre italic">
-                            &ldquo;{pe.notes}&rdquo;
+                        {pe.notes && !done && (
+                          <p className="mt-2 text-xs text-muted-foreground italic line-clamp-1">
+                            „{pe.notes}&rdquo;
                           </p>
                         )}
                       </div>
 
-                      {/* Status column */}
-                      <div className="hidden md:block col-span-2 text-right">
-                        {done ? (
-                          <div className="text-xs">
-                            <div className="text-primary font-medium">
-                              ✓ Făcut azi
-                            </div>
-                            {lastPain != null && (
-                              <div className="text-muted-foreground mt-1">
-                                durere {lastPain}/10
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="text-xs text-muted-foreground">
-                            În așteptare
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="col-span-12 md:col-span-1 flex md:justify-end">
-                        <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition" />
-                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0 hidden sm:block" />
                     </Link>
                   </li>
                 );
               })}
             </ol>
 
-            {/* Signature */}
-            <div className="mt-10 flex items-center justify-end gap-4 text-right">
-              <div>
-                <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  Prescris de
-                </div>
-                <div className="font-hand text-2xl text-foreground/80">
+            {/* Therapist card */}
+            <div className="p-5 border-t border-border/60 bg-secondary/40 flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-[oklch(0.48_0.12_210)] text-primary-foreground flex items-center justify-center shadow-soft">
+                <Stethoscope className="h-5 w-5" strokeWidth={2.2} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs text-muted-foreground">Prescris de</div>
+                <div className="font-semibold text-sm truncate">
                   {therapistName}
                 </div>
               </div>
-              <Leaf className="h-8 w-8 text-primary/40" />
+              <Link
+                href="/dashboard/messages"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" }),
+                  "rounded-full"
+                )}
+              >
+                Scrie-i
+              </Link>
             </div>
           </div>
         </section>
       ))}
-
-      {/* CLOSING LINE */}
-      <section className="border-t border-foreground/10">
-        <div className="max-w-[1100px] mx-auto px-6 md:px-10 py-14 text-center">
-          <div className="font-hand text-3xl md:text-4xl text-ochre mb-2">
-            &mdash; pasul următor
-          </div>
-          <h3 className="font-serif text-2xl md:text-3xl max-w-xl mx-auto leading-tight">
-            {allDone
-              ? "Ai făcut tot. Odihnă activă și mișcare ușoară."
-              : todayDone === 0 && total > 0
-              ? "Începe cu primul. Corpul învață prin repetiție."
-              : total === 0
-              ? "Revino mâine — planul se va actualiza."
-              : "Continuă. Fiecare repetare construiește ceva."}
-          </h3>
-          {total > 0 && !allDone && (
-            <div className="mt-8">
-              <Link href="/dashboard/exercises">
-                <Button size="lg" className="gap-2 rounded-none px-6 h-12">
-                  Vezi toate exercițiile
-                  <ArrowUpRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
     </div>
   );
 }
 
-/* ====================================================================
-   COMPONENTS
-   ==================================================================== */
+/* ------------------------------------------------------------------ */
+/* Components                                                          */
+/* ------------------------------------------------------------------ */
 
 function ProgressDial({
   rate,
@@ -368,23 +333,19 @@ function ProgressDial({
   total: number;
 }) {
   const size = 160;
-  const stroke = 8;
+  const stroke = 10;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const offset = c - (rate / 100) * c;
   return (
     <div className="relative w-[160px] h-[160px]">
-      <svg
-        width={size}
-        height={size}
-        className="-rotate-90"
-      >
+      <svg width={size} height={size} className="-rotate-90">
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="var(--border)"
+          stroke="rgba(255,255,255,0.2)"
           strokeWidth={stroke}
         />
         <circle
@@ -392,7 +353,7 @@ function ProgressDial({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="var(--primary)"
+          stroke="white"
           strokeWidth={stroke}
           strokeDasharray={c}
           strokeDashoffset={offset}
@@ -401,8 +362,8 @@ function ProgressDial({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="display-numeral text-4xl">{rate}%</div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
+        <div className="text-4xl font-bold tracking-tight">{rate}%</div>
+        <div className="text-[11px] opacity-80 mt-0.5">
           {done}/{total} azi
         </div>
       </div>
@@ -410,50 +371,91 @@ function ProgressDial({
   );
 }
 
-function DayBar({
+function StreakBadge({ streak }: { streak: number }) {
+  if (streak === 0) return null;
+  return (
+    <div className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur rounded-full px-3.5 py-2 text-sm font-medium">
+      <Flame className="h-4 w-4 text-[var(--coral-soft)]" />
+      <span>
+        <span className="font-bold">{streak}</span> {streak === 1 ? "zi" : "zile"} consecutiv
+      </span>
+    </div>
+  );
+}
+
+function DayCell({
+  label,
   count,
   intensity,
   isToday: today,
 }: {
   label: string;
   count: number;
-  intensity: number; // 0–1
+  intensity: number;
   isToday: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center gap-1.5">
+    <div className="flex flex-col items-center gap-2">
       <div
-        className={`relative w-full h-20 md:h-24 rounded-sm overflow-hidden ${
-          today
-            ? "ring-2 ring-primary ring-offset-1 ring-offset-background"
-            : ""
+        className={`relative w-full aspect-square rounded-2xl flex items-center justify-center transition-all ${
+          today ? "ring-2 ring-primary ring-offset-2 ring-offset-card" : ""
         }`}
         style={{
-          background: count > 0
-            ? `color-mix(in oklch, var(--primary) ${Math.max(
-                12,
-                intensity * 70
-              )}%, var(--muted))`
-            : "var(--muted)",
+          background:
+            count > 0
+              ? `color-mix(in oklch, var(--primary) ${Math.max(
+                  18,
+                  intensity * 75
+                )}%, var(--muted))`
+              : "var(--muted)",
         }}
       >
-        {count > 0 && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span
-              className="font-serif text-xl"
-              style={{
-                color:
-                  intensity > 0.4
-                    ? "var(--primary-foreground)"
-                    : "var(--foreground)",
-              }}
-            >
-              {count}
-            </span>
-          </div>
+        {count > 0 ? (
+          <span
+            className="text-lg font-bold"
+            style={{
+              color:
+                intensity > 0.45
+                  ? "var(--primary-foreground)"
+                  : "var(--foreground)",
+            }}
+          >
+            {count}
+          </span>
+        ) : (
+          <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
         )}
       </div>
+      <div
+        className={`text-[11px] font-medium ${
+          today ? "text-primary" : "text-muted-foreground"
+        }`}
+      >
+        {label}
+      </div>
     </div>
+  );
+}
+
+function MetaPill({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "default" | "coral" | "mint";
+}) {
+  const cls =
+    tone === "coral"
+      ? "bg-coral-soft text-coral"
+      : tone === "mint"
+        ? "bg-mint-soft text-mint"
+        : "bg-secondary text-secondary-foreground";
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${cls}`}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -465,32 +467,29 @@ function EmptyState({
   greeting: string;
 }) {
   return (
-    <div>
-      <div className="border-b border-foreground/15">
-        <div className="max-w-[1100px] mx-auto px-6 md:px-10 py-4 text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-          Prescripție de azi · {formatDateLong(new Date())}
+    <div className="min-h-screen px-5 md:px-10 py-12 flex items-center">
+      <div className="max-w-2xl mx-auto w-full">
+        <div className="bg-card rounded-[2rem] border shadow-soft p-8 md:p-12 text-center">
+          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-[oklch(0.48_0.12_210)] text-primary-foreground flex items-center justify-center mx-auto mb-6 shadow-soft">
+            <HeartPulse className="h-7 w-7" strokeWidth={2.2} />
+          </div>
+          <div className="text-sm text-muted-foreground mb-2">{greeting}</div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Bine ai venit, {name}.
+          </h1>
+          <p className="mt-4 text-muted-foreground max-w-md mx-auto leading-relaxed">
+            Terapeutul tău nu ți-a atribuit încă un plan. Îți pregătește
+            prescripția și o vei vedea aici în curând.
+          </p>
         </div>
       </div>
-      <section className="max-w-[1100px] mx-auto px-6 md:px-10 py-20 md:py-32 text-center">
-        <div className="font-hand text-2xl text-ochre mb-3">{greeting}</div>
-        <h1 className="font-serif text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] mb-6">
-          Bine ai venit, {name}.
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-md mx-auto">
-          Terapeutul tău nu ți-a atribuit încă un plan. Îți scrie prescripția
-          în curând.
-        </p>
-        <div className="mt-10">
-          <Heart className="h-8 w-8 text-primary/40 mx-auto" />
-        </div>
-      </section>
     </div>
   );
 }
 
-/* ====================================================================
-   HELPERS
-   ==================================================================== */
+/* ------------------------------------------------------------------ */
+/* Helpers                                                             */
+/* ------------------------------------------------------------------ */
 
 function isToday(c: { completedAt: Date | string }) {
   return (
@@ -509,7 +508,6 @@ function buildWeekData(
     isToday: boolean;
   }[] = [];
   const today = new Date();
-  // Start on Monday 6 days ago
   for (let i = 6; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(today.getDate() - i);
@@ -517,7 +515,6 @@ function buildWeekData(
     const count = completions.filter(
       (c) => new Date(c.completedAt).toDateString() === dayStr
     ).length;
-    // Romanian week starts Monday: getDay() returns 0 for Sun; map to Mo-Su
     const idx = (d.getDay() + 6) % 7;
     days.push({
       label: labels[idx],
@@ -545,35 +542,8 @@ function computeStreak(dates: (Date | string)[]) {
 
 function getGreeting() {
   const h = new Date().getHours();
-  if (h < 6) return "noapte bună,";
-  if (h < 12) return "bună dimineața,";
-  if (h < 18) return "bună ziua,";
-  return "bună seara,";
-}
-
-function formatDateLong(d: Date) {
-  const days = [
-    "duminică",
-    "luni",
-    "marți",
-    "miercuri",
-    "joi",
-    "vineri",
-    "sâmbătă",
-  ];
-  const months = [
-    "ianuarie",
-    "februarie",
-    "martie",
-    "aprilie",
-    "mai",
-    "iunie",
-    "iulie",
-    "august",
-    "septembrie",
-    "octombrie",
-    "noiembrie",
-    "decembrie",
-  ];
-  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`;
+  if (h < 6) return "Noapte bună";
+  if (h < 12) return "Bună dimineața";
+  if (h < 18) return "Bună ziua";
+  return "Bună seara";
 }
