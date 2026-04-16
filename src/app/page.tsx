@@ -2,666 +2,790 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Activity,
-  Video,
-  BarChart3,
-  Calendar,
-  MessageSquare,
-  CheckCircle2,
-  PlayCircle,
-  ShieldCheck,
   ArrowRight,
-  Quote,
+  ArrowUpRight,
   Clock3,
-  Stethoscope,
-  MapPin,
-  Phone,
-  Sparkles,
   Heart,
   Leaf,
+  Star,
+  Stethoscope,
 } from "lucide-react";
 
-// Single practitioner copy — replace with real therapist details.
 const PRACTITIONER_NAME = "Dr. Physio";
 const PRACTITIONER_TITLE = "Kinetoterapeut principal";
 const PRACTITIONER_YEARS = "12+";
 const PRACTITIONER_PATIENTS = "600+";
 const PRACTITIONER_LOCATION = "București";
+const ISSUE = "Nr. 1";
+const YEAR = new Date().getFullYear();
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <LogoMark />
-            <div className="flex flex-col leading-none">
-              <span className="text-lg font-bold tracking-tight">
-                PhysioConnect
-              </span>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                Recuperare · {PRACTITIONER_LOCATION}
-              </span>
-            </div>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#despre" className="hover:text-foreground transition">
-              Despre mine
-            </a>
-            <a href="#proces" className="hover:text-foreground transition">
-              Procesul
-            </a>
-            <a href="#platforma" className="hover:text-foreground transition">
-              Platforma
-            </a>
-            <a href="#pareri" className="hover:text-foreground transition">
-              Păreri pacienți
-            </a>
-          </nav>
-          <div className="flex items-center gap-2">
-            <Link href="/login" className="hidden sm:inline-flex">
-              <Button variant="ghost" size="sm">
-                Autentificare
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button size="sm" className="gap-1">
-                Intră în cont <ArrowRight className="h-3.5 w-3.5" />
-              </Button>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* COVER — full-screen editorial opener */}
+      <CoverPage />
+
+      {/* CHAPTER 01 — Manifesto */}
+      <Manifesto />
+
+      {/* MARQUEE — condition ticker */}
+      <MarqueeBand />
+
+      {/* CHAPTER 02 — Method */}
+      <Method />
+
+      {/* CHAPTER 03 — Case Studies (horizontal scroll) */}
+      <CaseStudies />
+
+      {/* CHAPTER 04 — Features bento */}
+      <Features />
+
+      {/* CHAPTER 05 — Numbers */}
+      <Numbers />
+
+      {/* CODA — enter */}
+      <Coda />
+
+      {/* Colophon */}
+      <Colophon />
+    </div>
+  );
+}
+
+/* ====================================================================
+   COVER
+   ==================================================================== */
+function CoverPage() {
+  return (
+    <section className="relative min-h-[92vh] overflow-hidden">
+      {/* Paper grain + subtle dot pattern */}
+      <div className="pointer-events-none absolute inset-0 bg-dots opacity-50 [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
+      <div className="pointer-events-none absolute top-20 right-10 h-[500px] w-[500px] rounded-full bg-primary/10 blur-3xl" />
+
+      {/* Top masthead */}
+      <div className="relative border-b border-foreground/20">
+        <div className="mx-auto max-w-[1400px] px-6 py-4 flex items-center justify-between text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+          <span className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            {ISSUE} · {YEAR}
+          </span>
+          <span className="hidden md:block">
+            Jurnal personal de kinetoterapie
+          </span>
+          <div className="flex items-center gap-5">
+            <Link href="/login" className="hover:text-foreground transition">
+              Cont pacient →
             </Link>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        {/* Decorative gradient blobs */}
-        <div className="pointer-events-none absolute -top-32 -left-24 h-[520px] w-[520px] rounded-full bg-primary/15 blur-3xl" />
-        <div className="pointer-events-none absolute top-40 -right-32 h-[420px] w-[420px] rounded-full bg-[oklch(0.78_0.13_70/0.25)] blur-3xl" />
-        {/* Dot pattern */}
-        <div className="pointer-events-none absolute inset-0 bg-dots opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
+      {/* Hero grid — asymmetric */}
+      <div className="relative mx-auto max-w-[1400px] px-6 pt-14 md:pt-24 pb-10 md:pb-20 grid grid-cols-12 gap-6">
+        {/* Left margin note */}
+        <aside className="hidden md:block col-span-2 pt-6">
+          <div className="sidewriter text-muted-foreground">
+            Ediția de {formatMonth()}
+          </div>
+        </aside>
 
-        <div className="relative container mx-auto px-4 pt-16 pb-20 md:pt-28 md:pb-32 grid md:grid-cols-[1.15fr_1fr] gap-12 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border bg-background/80 backdrop-blur px-3.5 py-1.5 text-xs font-medium shadow-sm">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              <Stethoscope className="h-3.5 w-3.5 text-primary" />
-              Cabinet de kinetoterapie · {PRACTITIONER_LOCATION}
-            </div>
-            <h1 className="mt-7 font-serif text-[2.75rem] sm:text-6xl md:text-[5.25rem] leading-[0.98] tracking-tight">
-              Recuperare care te{" "}
-              <span className="accent-underline italic text-primary">
-                ține în mișcare
-              </span>
-              <span className="text-muted-foreground/70">.</span>
-            </h1>
-            <p className="mt-7 text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-              Îți prescriu exerciții video adaptate stării tale, iar tu le
-              urmezi acasă după programul nostru. Fiecare repetare, fiecare
-              nivel de durere e înregistrat — îți ajustez planul săptămână de
-              săptămână.
+        {/* Headline */}
+        <div className="col-span-12 md:col-span-7">
+          <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-6">
+            Volumul 01 · Recuperare
+          </div>
+          <h1 className="font-serif leading-[0.9] tracking-tight text-[clamp(3.5rem,10vw,10rem)]">
+            Corpul
+            <br />
+            care{" "}
+            <span className="italic text-primary">
+              {" "}
+              se&nbsp;învață
+            </span>
+            <br />
+            din nou.
+          </h1>
+          <div className="mt-10 flex items-start gap-8">
+            <span className="h-px w-10 bg-foreground mt-3 shrink-0" />
+            <p className="font-serif text-xl leading-snug max-w-md text-foreground/80">
+              Un cabinet de kinetoterapie în {PRACTITIONER_LOCATION} și o
+              platformă care nu te lasă singur între ședințe.
             </p>
-            <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          </div>
+        </div>
+
+        {/* Right — signature block */}
+        <div className="col-span-12 md:col-span-3 md:col-start-10 flex flex-col justify-end">
+          <div className="relative border-l-2 border-foreground/80 pl-5 py-1 mb-6">
+            <div className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground mb-1">
+              Prescripție semnată de
+            </div>
+            <div className="font-hand text-3xl text-foreground">
+              {PRACTITIONER_NAME}
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {PRACTITIONER_TITLE}
+            </div>
+          </div>
+          <Link href="/login" className="group inline-flex items-center gap-2">
+            <span className="font-medium">Intră în cont</span>
+            <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Bottom strip — index */}
+      <div className="relative mx-auto max-w-[1400px] px-6 pb-6">
+        <div className="border-t border-foreground/15 pt-4 grid grid-cols-2 md:grid-cols-5 gap-4 text-xs text-muted-foreground">
+          <IndexItem n="01" label="Manifest" />
+          <IndexItem n="02" label="Metoda" />
+          <IndexItem n="03" label="Cazuri" />
+          <IndexItem n="04" label="Platforma" />
+          <IndexItem n="05" label="Intrare" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function IndexItem({ n, label }: { n: string; label: string }) {
+  return (
+    <div className="flex items-baseline gap-2">
+      <span className="font-mono text-[10px] text-primary">{n}</span>
+      <span className="font-serif text-base text-foreground">{label}</span>
+    </div>
+  );
+}
+
+/* ====================================================================
+   MANIFESTO
+   ==================================================================== */
+function Manifesto() {
+  return (
+    <section id="manifest" className="relative py-24 md:py-40 border-t border-foreground/10">
+      <div className="mx-auto max-w-[1400px] px-6 grid grid-cols-12 gap-6">
+        <ChapterLabel n="01" label="Manifest" />
+
+        <div className="col-span-12 md:col-span-9 md:col-start-4">
+          <p className="font-serif text-[clamp(1.75rem,3.5vw,3rem)] leading-[1.15] text-foreground">
+            Recuperarea nu e un{" "}
+            <span className="italic text-primary">protocol</span>. Este o
+            conversație între corp și răbdare — o succesiune zilnică de
+            mișcări mici care, pe termen lung, reconstruiesc încrederea
+            pierdută după o accidentare, o operație, un episod de durere
+            cronică.
+          </p>
+
+          <div className="mt-16 grid md:grid-cols-2 gap-12">
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Ce fac
+              </div>
+              <p className="text-base leading-relaxed text-foreground/80">
+                Te evaluez în cabinet, îți construiesc un program
+                individual, îți filmez demonstrațiile exercițiilor și îți
+                urmăresc aderența prin platformă. Nu copiez planuri — le
+                scriu pentru tine.
+              </p>
+            </div>
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Ce nu fac
+              </div>
+              <p className="text-base leading-relaxed text-foreground/80">
+                Nu lucrez cu mai mulți pacienți pe oră. Nu trimit
+                PDF-uri standard. Nu dispar între ședințe. Platforma este
+                proba că urmăresc ce faci acasă — nu doar ce faci la
+                cabinet.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ====================================================================
+   MARQUEE — conditions ticker
+   ==================================================================== */
+function MarqueeBand() {
+  const items = [
+    "Hernie de disc lombară",
+    "Post-operator genunchi",
+    "Entorsă gleznă",
+    "Durere cronică cervicală",
+    "Recuperare umăr",
+    "Accident sportiv",
+    "Scolioză",
+    "Rigiditate șold",
+    "Tendinită cotul",
+    "Post-fractură",
+  ];
+  const loop = [...items, ...items];
+  return (
+    <section className="relative border-y border-foreground/80 bg-foreground text-background py-4 overflow-hidden">
+      <div className="flex gap-12 ticker-track whitespace-nowrap">
+        {loop.map((it, i) => (
+          <span
+            key={i}
+            className="font-serif text-2xl md:text-4xl italic flex items-center gap-12"
+          >
+            {it}
+            <Star className="h-4 w-4 text-primary shrink-0" />
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ====================================================================
+   METHOD — three chapters
+   ==================================================================== */
+function Method() {
+  const chapters = [
+    {
+      n: "I",
+      title: "Evaluare",
+      body:
+        "Ne vedem în cabinet. Evaluez mobilitatea, forța, calitatea mișcării și discutăm istoricul tău medical. Nu e o rutină — ascult, observ, notez.",
+      margin: "45 de minute",
+    },
+    {
+      n: "II",
+      title: "Prescripție",
+      body:
+        "Construiesc un plan de exerciții exact pentru tine. Fiecare exercițiu e filmat cu adnotări pe momentele critice. Îl primești pe platformă în 24 de ore.",
+      margin: "Video cu adnotări",
+    },
+    {
+      n: "III",
+      title: "Ajustare",
+      body:
+        "Văd în fiecare seară ce ai făcut, cât a durut, cât de greu ți s-a părut. Modific planul săptămânal în funcție de cum răspunde corpul tău.",
+      margin: "Săptămână de săptămână",
+    },
+  ];
+  return (
+    <section id="metoda" className="relative py-24 md:py-40">
+      <div className="mx-auto max-w-[1400px] px-6">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <ChapterLabel n="02" label="Metoda" />
+          <div className="col-span-12 md:col-span-9 md:col-start-4">
+            <h2 className="font-serif text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95] tracking-tight">
+              Trei pași. Niciodată{" "}
+              <span className="italic text-primary">grăbit</span>.
+            </h2>
+          </div>
+        </div>
+
+        <div className="space-y-0">
+          {chapters.map((c, i) => (
+            <ChapterRow key={c.n} {...c} reverse={i % 2 === 1} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ChapterRow({
+  n,
+  title,
+  body,
+  margin,
+  reverse = false,
+}: {
+  n: string;
+  title: string;
+  body: string;
+  margin: string;
+  reverse?: boolean;
+}) {
+  return (
+    <article
+      className={`group grid grid-cols-12 gap-6 py-10 md:py-14 border-t border-foreground/10 first:border-t-0 ${
+        reverse ? "md:[&>*:first-child]:order-2" : ""
+      }`}
+    >
+      {/* Big Roman numeral */}
+      <div className="col-span-12 md:col-span-4">
+        <div className="display-numeral text-[clamp(5rem,14vw,13rem)] text-foreground/90">
+          {n}
+        </div>
+        <div className="mt-2 font-hand text-2xl text-ochre">
+          {margin}
+        </div>
+      </div>
+
+      {/* Text block */}
+      <div className="col-span-12 md:col-span-7 md:col-start-6 flex flex-col justify-center">
+        <h3 className="font-serif text-4xl md:text-5xl mb-5 tracking-tight">
+          {title}
+        </h3>
+        <p className="text-lg leading-relaxed text-foreground/80 max-w-xl">
+          {body}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+/* ====================================================================
+   CASE STUDIES — horizontal scroll
+   ==================================================================== */
+function CaseStudies() {
+  const cases = [
+    {
+      tag: "Caz 01 · Andreea, 34",
+      context: "Post-operator LCA genunchi",
+      duration: "4 luni",
+      quote:
+        "Am revenit la alergat în 4 luni. Faptul că aveam fiecare exercițiu video pe telefon a făcut o diferență uriașă — nu mai uitam cum se execută corect.",
+      narrative:
+        "Andreea a venit la cabinet la două săptămâni după operație, cu edem persistent și teama firească de a îndoi genunchiul. Planul inițial: 6 exerciții blânde, adnotări video pe fiecare reper critic. La săptămâna a opta — jog ușor pe iarbă. La a șaisprezecea — alergare pe pistă.",
+    },
+    {
+      tag: "Caz 02 · Radu, 51",
+      context: "Durere cronică lombară",
+      duration: "7 luni",
+      quote:
+        "Platforma mă ținea responsabil. Vedeam că notez durerea în fiecare seară și aveam un grafic care chiar arăta că mă fac bine.",
+      narrative:
+        "Radu a trăit cu dureri lombare timp de trei ani. Nu un incident — o slăbiciune. Am construit un program de stabilizare progresivă a zonei centrale, ajustat săptămânal în funcție de scorul de durere pe care îl înregistra în aplicație. La luna a șaptea, dormea opt ore fără rigiditate matinală.",
+    },
+    {
+      tag: "Caz 03 · Maria, 28",
+      context: "Recuperare post-accident rutier",
+      duration: "9 luni",
+      quote:
+        "Adnotările pe video la momentul exact m-au ajutat să nu fac greșeli. Când aveam o întrebare, răspunsul venea în câteva ore.",
+      narrative:
+        "Accident de mașină cu fractură de bazin și contuzie cervicală. Programul a fost construit în etape: imobilizare controlată, mobilizare progresivă, forță, apoi revenire la activitate. Fiecare etapă a avut repere clare, filmate cu adnotări pe fiecare mișcare sensibilă.",
+    },
+  ];
+  return (
+    <section id="cazuri" className="relative py-24 md:py-40 border-t border-foreground/10 bg-secondary/40">
+      <div className="mx-auto max-w-[1400px] px-6 mb-16 grid grid-cols-12 gap-6">
+        <ChapterLabel n="03" label="Cazuri" />
+        <div className="col-span-12 md:col-span-9 md:col-start-4">
+          <h2 className="font-serif text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95] tracking-tight">
+            Trei oameni.{" "}
+            <span className="italic text-primary">Trei reveniri.</span>
+          </h2>
+        </div>
+      </div>
+
+      {/* Horizontal scroller */}
+      <div className="relative">
+        <div className="no-scrollbar overflow-x-auto overflow-y-hidden snap-x snap-mandatory">
+          <div className="flex gap-6 md:gap-10 px-6 md:pl-[calc((100vw-1400px)/2+1.5rem)] md:pr-[calc((100vw-1400px)/2+1.5rem)] pb-4">
+            {cases.map((c, i) => (
+              <CaseCard key={i} index={i} {...c} />
+            ))}
+            <div className="shrink-0 w-4" />
+          </div>
+        </div>
+        <div className="mx-auto max-w-[1400px] px-6 mt-6 flex items-center justify-between text-xs text-muted-foreground">
+          <span className="font-mono">← glisează →</span>
+          <span>3 cazuri studiate</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CaseCard({
+  index,
+  tag,
+  context,
+  duration,
+  quote,
+  narrative,
+}: {
+  index: number;
+  tag: string;
+  context: string;
+  duration: string;
+  quote: string;
+  narrative: string;
+}) {
+  return (
+    <article className="snap-start shrink-0 w-[88vw] md:w-[620px] bg-card border border-foreground/15 p-8 md:p-10 rounded-sm relative">
+      {/* Corner index */}
+      <div className="absolute top-4 right-4 font-mono text-[10px] text-muted-foreground">
+        {String(index + 1).padStart(2, "0")} / 03
+      </div>
+
+      <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mb-4">
+        {tag}
+      </div>
+      <h3 className="font-serif text-3xl md:text-4xl leading-tight mb-2">
+        {context}
+      </h3>
+      <div className="font-hand text-xl text-ochre mb-8">
+        Recuperare completă · {duration}
+      </div>
+
+      <div className="border-l-2 border-primary pl-5 mb-8">
+        <p className="font-serif text-xl italic leading-snug text-foreground/90">
+          &ldquo;{quote}&rdquo;
+        </p>
+      </div>
+
+      <div className="rule-ornament text-[10px] uppercase tracking-[0.2em] mb-5">
+        Cronica tratamentului
+      </div>
+
+      <p className="text-base leading-relaxed text-foreground/80">
+        {narrative}
+      </p>
+    </article>
+  );
+}
+
+/* ====================================================================
+   FEATURES — bento grid (editorial, asymmetric)
+   ==================================================================== */
+function Features() {
+  return (
+    <section id="platforma" className="relative py-24 md:py-40 border-t border-foreground/10">
+      <div className="mx-auto max-w-[1400px] px-6">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <ChapterLabel n="04" label="Platforma" />
+          <div className="col-span-12 md:col-span-9 md:col-start-4">
+            <h2 className="font-serif text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95] tracking-tight">
+              Instrumente cât să fie{" "}
+              <span className="italic text-primary">destul</span>.
+            </h2>
+          </div>
+        </div>
+
+        {/* Asymmetric bento grid */}
+        <div className="grid grid-cols-12 gap-4 md:gap-5">
+          {/* Big feature */}
+          <div className="col-span-12 md:col-span-7 md:row-span-2 relative bg-foreground text-background rounded-sm p-8 md:p-10 overflow-hidden min-h-[320px]">
+            <div className="absolute inset-0 bg-dots opacity-15" />
+            <div className="relative h-full flex flex-col justify-between">
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/60 mb-4">
+                  Caracteristică principală
+                </div>
+                <h3 className="font-serif text-4xl md:text-6xl leading-[1] mb-6">
+                  Bibliotecă video cu{" "}
+                  <span className="italic text-ochre">adnotări</span>
+                </h3>
+                <p className="text-background/80 leading-relaxed max-w-md">
+                  Fiecare exercițiu este filmat de mine, cu adnotări pe
+                  secundă exactă. Când urmărești videoul, vezi pe cronologie
+                  exact unde îți trag atenția: &ldquo;cot aici&rdquo;,
+                  &ldquo;respiră acum&rdquo;, &ldquo;nu accelera&rdquo;.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 text-sm font-serif italic text-ochre mt-10">
+                <span className="h-px w-10 bg-ochre" />
+                Funcționează pe orice telefon
+              </div>
+            </div>
+          </div>
+
+          {/* Small features */}
+          <FeatureTile
+            tag="02"
+            title="Rutină zilnică"
+            body="Vezi exact ce ai de făcut azi, în ordinea pe care am scris-o eu."
+          />
+          <FeatureTile
+            tag="03"
+            title="Jurnal de durere"
+            body="Notezi scurt seară de seară: scor, dificultate, observații."
+            tone="ochre"
+          />
+          <FeatureTile
+            tag="04"
+            title="Mesagerie directă"
+            body="Întrebări scurte între ședințe — fără telefoane, fără confuzie."
+          />
+          <FeatureTile
+            tag="05"
+            title="Grafice de progres"
+            body="Vezi cum scade durerea, cât de regulat lucrezi, unde ești în plan."
+          />
+          <FeatureTile
+            tag="06"
+            title="Intimitate totală"
+            body="Datele tale medicale sunt criptate. Doar eu le văd. GDPR."
+            tone="ochre"
+          />
+          <FeatureTile
+            tag="07"
+            title="Progresie inteligentă"
+            body="Când ești gata, cresc volumul. Nu înainte. Nu arbitrar."
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeatureTile({
+  tag,
+  title,
+  body,
+  tone = "default",
+}: {
+  tag: string;
+  title: string;
+  body: string;
+  tone?: "default" | "ochre";
+}) {
+  const isOchre = tone === "ochre";
+  return (
+    <div
+      className={`col-span-12 md:col-span-5 ${
+        isOchre
+          ? "bg-ochre/15 border border-ochre/30"
+          : "bg-card border border-foreground/10"
+      } rounded-sm p-6 md:p-7 group hover:border-foreground/30 transition-colors relative`}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+          Cap. {tag}
+        </div>
+        <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition" />
+      </div>
+      <h3 className="font-serif text-2xl md:text-3xl mb-2 leading-tight">
+        {title}
+      </h3>
+      <p className="text-sm text-foreground/70 leading-relaxed">{body}</p>
+    </div>
+  );
+}
+
+/* ====================================================================
+   NUMBERS — large display
+   ==================================================================== */
+function Numbers() {
+  return (
+    <section className="relative py-24 md:py-40 border-t border-foreground/10">
+      <div className="mx-auto max-w-[1400px] px-6">
+        <div className="grid grid-cols-12 gap-6 mb-16">
+          <div className="col-span-12 md:col-span-9 md:col-start-4">
+            <div className="font-hand text-3xl text-ochre mb-2">
+              &mdash; în cifre
+            </div>
+            <h2 className="font-serif text-[clamp(2rem,5vw,4.5rem)] leading-[0.98] tracking-tight">
+              Ce mai arată cabinetul, după{" "}
+              <span className="italic text-primary">
+                {PRACTITIONER_YEARS} ani
+              </span>
+              .
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-8 md:gap-4 border-t border-foreground/20">
+          <BigNumber value={PRACTITIONER_PATIENTS} label="Pacienți tratați" />
+          <BigNumber value={PRACTITIONER_YEARS} label="Ani de practică" suffix="ani" />
+          <BigNumber value="97%" label="Aderență la plan" />
+          <BigNumber value="4.9" label="Scor satisfacție / 5" suffix="★" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BigNumber({
+  value,
+  label,
+  suffix,
+}: {
+  value: string;
+  label: string;
+  suffix?: string;
+}) {
+  return (
+    <div className="col-span-6 md:col-span-3 py-10 md:py-16 border-b border-foreground/20 md:border-b-0 md:border-r last:border-r-0 md:pr-4">
+      <div className="flex items-start gap-2">
+        <div className="display-numeral text-[clamp(4rem,9vw,8rem)] text-foreground">
+          {value}
+        </div>
+        {suffix && (
+          <div className="font-serif text-lg text-muted-foreground mt-3">
+            {suffix}
+          </div>
+        )}
+      </div>
+      <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        {label}
+      </div>
+    </div>
+  );
+}
+
+/* ====================================================================
+   CODA — closing CTA
+   ==================================================================== */
+function Coda() {
+  return (
+    <section className="relative py-20 md:py-32 border-t border-foreground/10 overflow-hidden">
+      <div className="pointer-events-none absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-primary/15 blur-3xl" />
+      <div className="pointer-events-none absolute -top-20 -right-20 h-[400px] w-[400px] rounded-full bg-ochre/20 blur-3xl" />
+
+      <div className="mx-auto max-w-[1400px] px-6 relative grid grid-cols-12 gap-6">
+        <div className="col-span-12 md:col-span-2">
+          <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
+            Coda · 05
+          </div>
+        </div>
+
+        <div className="col-span-12 md:col-span-10">
+          <h2 className="font-serif text-[clamp(3rem,9vw,9rem)] leading-[0.9] tracking-tight mb-10">
+            Hai să începem.
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-10 max-w-4xl">
+            <div className="border-t-2 border-foreground pt-6">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Sunt deja pacient
+              </div>
+              <p className="text-foreground/80 leading-relaxed mb-6">
+                Intră direct în cont pentru a-ți vedea planul de azi,
+                înregistra completările și comunica cu mine.
+              </p>
               <Link href="/login">
-                <Button
-                  size="lg"
-                  className="gap-2 h-12 text-base px-7 w-full sm:w-auto shadow-lg shadow-primary/20"
-                >
-                  Accesează planul meu <ArrowRight className="h-4 w-4" />
+                <Button size="lg" className="gap-2 h-12 px-6 rounded-none">
+                  Accesează cont
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <a href="#proces">
+            </div>
+
+            <div className="border-t-2 border-ochre pt-6">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                Vreau o evaluare
+              </div>
+              <p className="text-foreground/80 leading-relaxed mb-6">
+                Programează o primă ședință la cabinet. Durează 45 de minute
+                și îmi oferă tot ce am nevoie pentru a construi planul.
+              </p>
+              <a href="mailto:contact@physioconnect.ro">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="gap-2 h-12 text-base px-7 w-full sm:w-auto"
+                  className="gap-2 h-12 px-6 rounded-none border-foreground"
                 >
-                  <PlayCircle className="h-4 w-4" />
-                  Vezi cum funcționează
+                  Scrie-mi un email
+                  <ArrowUpRight className="h-4 w-4" />
                 </Button>
               </a>
             </div>
-            <div className="mt-11 flex flex-wrap items-center gap-x-7 gap-y-3 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4 text-primary" />
-                Date confidențiale · GDPR
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Clock3 className="h-4 w-4 text-primary" />
-                Acces 24/7
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-primary" />
-                Fără instalare
-              </span>
-            </div>
-          </div>
-
-          {/* Hero visual — layered preview + accent chips */}
-          <div className="relative">
-            {/* Accent ring behind */}
-            <div className="absolute -inset-6 rounded-[2rem] border border-dashed border-primary/25 rotate-[-3deg] pointer-events-none" />
-            <div className="relative rounded-[1.75rem] border bg-card shadow-[0_30px_80px_-20px_oklch(0.42_0.08_155/0.25)] overflow-hidden">
-              <div className="flex items-center gap-1.5 px-4 py-3 border-b bg-secondary/60">
-                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.7_0.18_30)]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.8_0.14_80)]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-                <span className="ml-3 text-xs text-muted-foreground font-medium">
-                  planul meu · marți
-                </span>
-              </div>
-              <div className="p-5 space-y-4">
-                <div className="grid grid-cols-3 gap-3">
-                  <MiniStat
-                    label="Astăzi"
-                    value="3/5"
-                    icon={CheckCircle2}
-                    tone="primary"
-                  />
-                  <MiniStat
-                    label="Săptămână"
-                    value="82%"
-                    icon={Activity}
-                    tone="ochre"
-                  />
-                  <MiniStat
-                    label="Durere"
-                    value="2.4"
-                    icon={BarChart3}
-                    tone="muted"
-                  />
-                </div>
-                <div className="space-y-2.5">
-                  {[
-                    { title: "Rotație externă umăr", done: true },
-                    { title: "Extensii genunchi", done: true },
-                    { title: "Mobilizare cervicală", done: false },
-                  ].map((ex) => (
-                    <div
-                      key={ex.title}
-                      className="flex items-center gap-3 p-3 rounded-xl border bg-background/60"
-                    >
-                      <div className="h-10 w-14 rounded-lg bg-gradient-to-br from-primary/25 to-[oklch(0.82_0.12_75/0.35)] flex items-center justify-center">
-                        <PlayCircle className="h-5 w-5 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate">
-                          {ex.title}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          3 × 12 · menținere 5s
-                        </div>
-                      </div>
-                      {ex.done ? (
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
-                      ) : (
-                        <span className="text-[10px] rounded-full border px-2 py-0.5 text-muted-foreground">
-                          În așteptare
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            {/* Floating card — progress */}
-            <div className="hidden sm:flex absolute -bottom-6 -left-8 items-center gap-3 rounded-2xl bg-card border shadow-xl px-4 py-3">
-              <div className="h-10 w-10 rounded-full bg-ochre/15 text-ochre flex items-center justify-center">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-[11px] text-muted-foreground">
-                  Progres săptămânal
-                </div>
-                <div className="text-sm font-semibold">+14% aderență</div>
-              </div>
-            </div>
-            {/* Floating card — encourage */}
-            <div className="hidden md:flex absolute -top-5 -right-4 items-center gap-2 rounded-full bg-primary text-primary-foreground shadow-lg px-4 py-2 text-xs font-medium">
-              <Heart className="h-3.5 w-3.5" />
-              Așa te vreau!
-            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* Stats strip */}
-      <section className="border-y border-border/60 bg-secondary/40">
-        <div className="container mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 text-center">
-          <BigStat value={PRACTITIONER_YEARS} label="ani experiență" />
-          <BigStat value={PRACTITIONER_PATIENTS} label="pacienți tratați" />
-          <BigStat value="24/7" label="acces la platformă" />
-          <BigStat value="1-la-1" label="abordare personalizată" />
-        </div>
-      </section>
-
-      {/* Despre mine */}
-      <section id="despre" className="relative py-20 md:py-28">
-        <div className="container mx-auto px-4 grid md:grid-cols-[0.95fr_1.4fr] gap-12 items-center">
-          <div className="relative">
-            {/* Portrait card */}
-            <div className="relative aspect-[4/5] rounded-[2rem] bg-gradient-to-br from-primary/25 via-[oklch(0.78_0.11_90/0.35)] to-[oklch(0.92_0.03_75)] border overflow-hidden">
-              <div className="absolute inset-0 bg-dots opacity-60 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
-              {/* Decorative leaf icon */}
-              <Leaf className="absolute top-6 right-6 h-8 w-8 text-primary/60" />
-              <div className="absolute bottom-0 left-0 right-0 p-7">
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-background/80 backdrop-blur px-3 py-1 text-[11px] font-medium mb-4">
-                  <MapPin className="h-3 w-3 text-primary" />
-                  {PRACTITIONER_LOCATION}
-                </div>
-                <div className="font-serif text-4xl leading-tight text-foreground">
-                  {PRACTITIONER_NAME}
-                </div>
-                <div className="text-sm text-muted-foreground mt-1">
-                  {PRACTITIONER_TITLE}
-                </div>
-              </div>
-            </div>
-            {/* Decorative pill behind */}
-            <div className="absolute -z-10 -bottom-6 -right-6 h-40 w-40 rounded-full bg-ochre/15 blur-2xl" />
+/* ====================================================================
+   COLOPHON — footer
+   ==================================================================== */
+function Colophon() {
+  return (
+    <footer className="relative border-t-2 border-foreground">
+      <div className="mx-auto max-w-[1400px] px-6 py-10 grid grid-cols-12 gap-6 text-xs">
+        <div className="col-span-12 md:col-span-4 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-[0.85rem] bg-gradient-to-br from-primary to-[oklch(0.35_0.07_155)] text-primary-foreground flex items-center justify-center relative">
+            <Activity className="h-4 w-4" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-ochre ring-2 ring-background" />
           </div>
           <div>
-            <SectionLabel>Despre mine</SectionLabel>
-            <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] mt-4">
-              Tratez cauza,
-              <br />
-              nu doar{" "}
-              <span className="italic accent-underline">simptomul</span>.
-            </h2>
-            <p className="mt-7 text-muted-foreground leading-relaxed max-w-xl text-base md:text-lg">
-              Cu {PRACTITIONER_YEARS} ani de experiență în recuperare
-              musculo-scheletală, post-chirurgicală și sportivă, lucrez cu
-              fiecare pacient individual — de la prima evaluare până la
-              revenirea completă la activitatea dorită. Platforma aceasta este
-              instrumentul pe care îl folosesc pentru a rămâne alături de tine
-              și între ședințe.
-            </p>
-
-            <div className="mt-9 flex items-center gap-6 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <Phone className="h-4 w-4 text-primary" />
-                Programări directe
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Heart className="h-4 w-4 text-primary" />
-                Follow-up continuu
-              </span>
+            <div className="font-serif text-base leading-none">
+              PhysioConnect
+            </div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
+              Cabinet personal · {PRACTITIONER_LOCATION}
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Procesul */}
-      <section
-        id="proces"
-        className="relative py-20 md:py-28 bg-secondary/50 border-y border-border/60 overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-dots opacity-40 [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_70%,transparent)]" />
-        <div className="relative container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <SectionLabel>Procesul</SectionLabel>
-            <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] mt-4">
-              De la evaluare la{" "}
-              <span className="italic text-primary">recuperare completă</span>
-            </h2>
+        <div className="col-span-6 md:col-span-3">
+          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+            Cabinet
           </div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <StepCard
-              step="01"
-              title="Evaluare în cabinet"
-              description="Ne întâlnim, evaluez starea actuală, obiectivele tale și construim împreună planul de recuperare."
-            />
-            <StepCard
-              step="02"
-              title="Primești planul video"
-              description="Îți aloc exerciții din biblioteca video, cu instrucțiuni clare și adnotări pe fiecare mișcare importantă."
-              featured
-            />
-            <StepCard
-              step="03"
-              title="Ajustăm pe parcurs"
-              description="Văd ce faci acasă — aderență, durere, dificultate — și modific planul ca să avansezi eficient și sigur."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Platforma */}
-      <section id="platforma" className="py-20 md:py-28">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <SectionLabel>Platforma</SectionLabel>
-            <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] mt-4">
-              Un singur loc pentru{" "}
-              <span className="italic accent-underline">recuperarea ta</span>
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
-            <FeatureCard
-              icon={<Video className="h-5 w-5" />}
-              title="Bibliotecă video"
-              description="Videoclipuri demonstrative pentru fiecare exercițiu, cu adnotări pe secundă de la mine."
-            />
-            <FeatureCard
-              icon={<Calendar className="h-5 w-5" />}
-              title="Rutină zilnică"
-              description="Vezi clar ce ai de făcut astăzi, fără să te întrebi ce urmează sau cât să faci."
-              tone="ochre"
-            />
-            <FeatureCard
-              icon={<BarChart3 className="h-5 w-5" />}
-              title="Progres măsurat"
-              description="Nivel de durere, repetări finalizate, aderență — vizualizate în grafice simple."
-            />
-            <FeatureCard
-              icon={<MessageSquare className="h-5 w-5" />}
-              title="Comunicare directă"
-              description="Pune întrebări scurte când ai dubii, fără să aștepți următoarea ședință."
-              tone="ochre"
-            />
-            <FeatureCard
-              icon={<Activity className="h-5 w-5" />}
-              title="Progresie inteligentă"
-              description="Când ești gata, cresc dificultatea sau volumul pe baza feedback-ului tău."
-            />
-            <FeatureCard
-              icon={<ShieldCheck className="h-5 w-5" />}
-              title="Intimitate garantată"
-              description="Datele tale medicale sunt stocate securizat, respectând GDPR. Doar eu le văd."
-              tone="ochre"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Păreri */}
-      <section
-        id="pareri"
-        className="relative py-20 md:py-28 bg-secondary/50 border-y border-border/60 overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-dots opacity-40 [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_70%,transparent)]" />
-        <div className="relative container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <SectionLabel>Păreri pacienți</SectionLabel>
-            <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] mt-4">
-              Rezultate reale,{" "}
-              <span className="italic text-primary">oameni reali</span>
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <Testimonial
-              initials="AM"
-              name="Andreea M."
-              context="Post-operator genunchi"
-              quote="Am revenit la alergat în 4 luni. Faptul că aveam fiecare exercițiu video pe telefon a făcut o diferență uriașă — nu mai uitam cum se execută corect."
-            />
-            <Testimonial
-              initials="RG"
-              name="Radu G."
-              context="Durere cronică lombară"
-              quote="Platforma mă ținea responsabil. Vedeam că notez durerea în fiecare seară și aveam un grafic care chiar arăta că mă fac bine."
-              featured
-            />
-            <Testimonial
-              initials="MV"
-              name="Maria V."
-              context="Recuperare post-accident"
-              quote="Adnotările pe video la momentul exact m-au ajutat să nu fac greșeli. Când aveam o întrebare, răspunsul venea în câteva ore."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 md:py-28">
-        <div className="container mx-auto px-4">
-          <div className="relative overflow-hidden rounded-[2rem] border bg-gradient-to-br from-primary via-[oklch(0.48_0.09_160)] to-[oklch(0.38_0.07_150)] text-primary-foreground p-10 md:p-16">
-            <div className="absolute inset-0 bg-dots opacity-20 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_70%)]" />
-            <div className="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-ochre/30 blur-3xl" />
-            <div className="relative max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-xs font-medium mb-6">
-                <Sparkles className="h-3.5 w-3.5" />
-                Începe azi
-              </div>
-              <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] mb-5">
-                Pregătit să începi{" "}
-                <span className="italic">recuperarea</span>?
-              </h2>
-              <p className="text-primary-foreground/85 mb-9 leading-relaxed text-base md:text-lg">
-                Dacă ești deja pacient, intră direct în cont pentru a-ți vedea
-                planul. Dacă vrei o evaluare, programează o consultație — te
-                aștept la cabinet.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link href="/login">
-                  <Button
-                    size="lg"
-                    className="h-12 px-8 text-base gap-2 bg-background text-foreground hover:bg-background/90 w-full sm:w-auto"
-                  >
-                    Intră în cont <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <a href="mailto:contact@physioconnect.ro">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-12 px-8 text-base bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white w-full sm:w-auto"
-                  >
-                    Programează consultație
-                  </Button>
-                </a>
-              </div>
+          <div className="space-y-1.5 text-foreground/80">
+            <div className="flex items-center gap-2">
+              <Stethoscope className="h-3 w-3" />
+              {PRACTITIONER_NAME}
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock3 className="h-3 w-3" />
+              Luni–Vineri, 09–19
+            </div>
+            <div className="flex items-center gap-2">
+              <Heart className="h-3 w-3" />
+              Evaluare inițială 45 min
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="border-t py-12 bg-secondary/40">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6 text-sm">
-          <div className="flex items-center gap-2.5">
-            <LogoMark small />
-            <div className="flex flex-col leading-tight">
-              <span className="font-semibold">PhysioConnect</span>
-              <span className="text-xs text-muted-foreground">
-                &copy; {new Date().getFullYear()} · Cabinet personal
-              </span>
-            </div>
+        <div className="col-span-6 md:col-span-2">
+          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+            Legal
           </div>
-          <div className="flex items-center gap-8 text-muted-foreground">
-            <span className="hover:text-foreground transition cursor-pointer">
-              Confidențialitate
-            </span>
-            <span className="hover:text-foreground transition cursor-pointer">
-              Termeni
-            </span>
-            <span className="hover:text-foreground transition cursor-pointer">
-              Contact
-            </span>
+          <div className="space-y-1.5 text-foreground/80">
+            <div>Confidențialitate</div>
+            <div>Termeni</div>
+            <div>GDPR</div>
           </div>
         </div>
-      </footer>
-    </div>
-  );
-}
 
-/* ——— Components ——— */
-
-function LogoMark({ small = false }: { small?: boolean }) {
-  const size = small ? "h-7 w-7" : "h-9 w-9";
-  const icon = small ? "h-3.5 w-3.5" : "h-4.5 w-4.5";
-  return (
-    <div
-      className={`${size} relative rounded-[0.85rem] bg-gradient-to-br from-primary to-[oklch(0.35_0.07_155)] text-primary-foreground flex items-center justify-center shadow-sm`}
-    >
-      <Activity className={icon} />
-      <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-ochre ring-2 ring-background" />
-    </div>
-  );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-      <span className="h-px w-6 bg-primary/50" />
-      {children}
-      <span className="h-px w-6 bg-primary/50" />
-    </div>
-  );
-}
-
-function FeatureCard({
-  icon,
-  title,
-  description,
-  tone = "primary",
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  tone?: "primary" | "ochre";
-}) {
-  const iconBg =
-    tone === "ochre"
-      ? "bg-ochre/15 text-ochre group-hover:bg-ochre group-hover:text-white"
-      : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white";
-  return (
-    <div className="group rounded-2xl border bg-card p-6 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5 transition-all">
-      <div
-        className={`h-11 w-11 rounded-xl flex items-center justify-center mb-5 transition-colors ${iconBg}`}
-      >
-        {icon}
-      </div>
-      <h3 className="font-semibold mb-1.5 text-base">{title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {description}
-      </p>
-    </div>
-  );
-}
-
-function StepCard({
-  step,
-  title,
-  description,
-  featured = false,
-}: {
-  step: string;
-  title: string;
-  description: string;
-  featured?: boolean;
-}) {
-  return (
-    <div
-      className={`relative rounded-2xl border p-7 transition-all ${
-        featured
-          ? "bg-card border-primary/30 shadow-xl shadow-primary/10 md:-translate-y-2"
-          : "bg-card/70 hover:bg-card hover:shadow-lg"
-      }`}
-    >
-      <div className="flex items-center gap-3 mb-4">
-        <div
-          className={`h-10 w-10 rounded-full flex items-center justify-center font-serif text-lg ${
-            featured
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary text-primary border border-primary/20"
-          }`}
-        >
-          {step}
-        </div>
-        <div className="h-px flex-1 bg-border" />
-      </div>
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {description}
-      </p>
-    </div>
-  );
-}
-
-function BigStat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="font-serif text-4xl md:text-5xl text-foreground">
-        {value}
-      </div>
-      <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-        {label}
-      </div>
-    </div>
-  );
-}
-
-function Testimonial({
-  initials,
-  name,
-  context,
-  quote,
-  featured = false,
-}: {
-  initials: string;
-  name: string;
-  context: string;
-  quote: string;
-  featured?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-2xl border p-7 flex flex-col h-full ${
-        featured
-          ? "bg-card shadow-xl shadow-primary/10 border-primary/30 md:-translate-y-3"
-          : "bg-card/80"
-      }`}
-    >
-      <Quote className="h-7 w-7 text-ochre/60 mb-4" />
-      <p className="text-foreground/90 leading-relaxed flex-1 font-serif text-lg italic">
-        &ldquo;{quote}&rdquo;
-      </p>
-      <div className="mt-6 pt-5 border-t flex items-center gap-3">
-        <div
-          className={`h-11 w-11 rounded-full font-semibold text-sm flex items-center justify-center ${
-            featured
-              ? "bg-primary text-primary-foreground"
-              : "bg-primary/10 text-primary"
-          }`}
-        >
-          {initials}
-        </div>
-        <div>
-          <div className="text-sm font-semibold">{name}</div>
-          <div className="text-xs text-muted-foreground">{context}</div>
+        <div className="col-span-12 md:col-span-3 md:text-right flex md:flex-col items-start md:items-end gap-2 justify-between">
+          <div className="font-hand text-2xl text-foreground/80">
+            &mdash; până data viitoare.
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            &copy; {YEAR} · {ISSUE}
+          </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }
 
-function MiniStat({
-  label,
-  value,
-  icon: Icon,
-  tone = "muted",
-}: {
-  label: string;
-  value: string;
-  icon: React.ComponentType<{ className?: string }>;
-  tone?: "primary" | "ochre" | "muted";
-}) {
-  const toneClass =
-    tone === "primary"
-      ? "bg-primary/10 text-primary"
-      : tone === "ochre"
-      ? "bg-ochre/15 text-ochre"
-      : "bg-muted text-muted-foreground";
+/* ====================================================================
+   SHARED
+   ==================================================================== */
+function ChapterLabel({ n, label }: { n: string; label: string }) {
   return (
-    <div className="rounded-xl border bg-background/70 p-3">
-      <div
-        className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-md ${toneClass}`}
-      >
-        <Icon className="h-3 w-3" />
-        {label}
+    <aside className="col-span-12 md:col-span-3 md:sticky md:top-6 md:self-start">
+      <div className="border-l-2 border-primary pl-4 py-1">
+        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
+          Capitolul
+        </div>
+        <div className="display-numeral text-5xl mt-2">{n}</div>
+        <div className="font-serif text-lg italic mt-1">{label}</div>
       </div>
-      <div className="text-lg font-bold mt-1.5">{value}</div>
-    </div>
+    </aside>
   );
+}
+
+function formatMonth() {
+  const months = [
+    "ianuarie",
+    "februarie",
+    "martie",
+    "aprilie",
+    "mai",
+    "iunie",
+    "iulie",
+    "august",
+    "septembrie",
+    "octombrie",
+    "noiembrie",
+    "decembrie",
+  ];
+  const d = new Date();
+  return `${months[d.getMonth()]} ${d.getFullYear()}`;
 }

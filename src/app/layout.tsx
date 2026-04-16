@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import {
+  Inter,
+  Instrument_Serif,
+  Caveat,
+  JetBrains_Mono,
+} from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
@@ -12,6 +17,18 @@ const serif = Instrument_Serif({
   variable: "--font-serif",
   subsets: ["latin"],
   weight: "400",
+});
+
+const hand = Caveat({
+  variable: "--font-hand",
+  subsets: ["latin"],
+  weight: ["400", "600"],
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -28,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="ro"
-      className={`${inter.variable} ${serif.variable} h-full antialiased`}
+      className={`${inter.variable} ${serif.variable} ${hand.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <TooltipProvider>{children}</TooltipProvider>

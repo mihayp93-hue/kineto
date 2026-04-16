@@ -21,12 +21,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navItems = [
-  { href: "/dashboard", label: "Acasă", icon: Home },
-  { href: "/dashboard/exercises", label: "Exercițiile mele", icon: Dumbbell },
-  { href: "/dashboard/calendar", label: "Calendar", icon: Calendar },
-  { href: "/dashboard/progress", label: "Progres", icon: TrendingUp },
-  { href: "/dashboard/messages", label: "Mesaje", icon: MessageSquare },
-  { href: "/dashboard/profile", label: "Profil", icon: User },
+  { num: "01", href: "/dashboard", label: "Astăzi", icon: Home },
+  { num: "02", href: "/dashboard/exercises", label: "Exerciții", icon: Dumbbell },
+  { num: "03", href: "/dashboard/calendar", label: "Calendar", icon: Calendar },
+  { num: "04", href: "/dashboard/progress", label: "Progres", icon: TrendingUp },
+  { num: "05", href: "/dashboard/messages", label: "Mesaje", icon: MessageSquare },
+  { num: "06", href: "/dashboard/profile", label: "Profil", icon: User },
 ];
 
 export function ClientSidebar() {
@@ -63,7 +63,7 @@ export function ClientSidebar() {
               PhysioConnect
             </span>
             <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground mt-0.5">
-              Portal pacient
+              Pacient · Jurnal
             </span>
           </div>
         </Link>
@@ -76,7 +76,12 @@ export function ClientSidebar() {
         </button>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+      <div className="px-6 pt-6 pb-2">
+        <div className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted-foreground">
+          Index
+        </div>
+      </div>
+      <nav className="flex-1 px-3 pb-4 overflow-y-auto">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -86,14 +91,37 @@ export function ClientSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "group flex items-center gap-3 px-3 py-3 border-b border-foreground/5 last:border-b-0 transition-colors relative",
                 isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <item.icon className="h-4 w-4" />
-              {item.label}
+              {isActive && (
+                <span className="absolute left-0 top-3 bottom-3 w-0.5 bg-primary rounded-full" />
+              )}
+              <span
+                className={cn(
+                  "font-mono text-[10px] shrink-0 w-5",
+                  isActive ? "text-primary" : "text-muted-foreground/60"
+                )}
+              >
+                {item.num}
+              </span>
+              <item.icon
+                className={cn(
+                  "h-4 w-4 shrink-0",
+                  isActive ? "text-primary" : ""
+                )}
+              />
+              <span
+                className={cn(
+                  "font-serif text-base leading-none",
+                  isActive ? "italic" : ""
+                )}
+              >
+                {item.label}
+              </span>
             </Link>
           );
         })}
