@@ -33,6 +33,7 @@ interface LibraryExercise {
   category: string;
   difficulty: string;
   bodyPart: string[];
+  tags: { id: string; name: string; color: string | null }[];
 }
 
 interface AssignedExercise {
@@ -60,6 +61,10 @@ export default function EditClientPage() {
   const [library, setLibrary] = useState<LibraryExercise[]>([]);
   const [assigned, setAssigned] = useState<AssignedExercise[]>([]);
   const [assignBusy, setAssignBusy] = useState<string | null>(null);
+  const [allTags, setAllTags] = useState<
+    { id: string; name: string; color: string | null }[]
+  >([]);
+  const [filterTagId, setFilterTagId] = useState<string | null>(null);
 
   const loadAssigned = useCallback(async () => {
     const r = await fetch(`/api/clients/${id}/assigned-exercises`);
@@ -92,6 +97,11 @@ export default function EditClientPage() {
     fetch("/api/exercises")
       .then((r) => r.json())
       .then(setLibrary)
+      .catch(() => {});
+
+    fetch("/api/tags")
+      .then((r) => r.json())
+      .then(setAllTags)
       .catch(() => {});
 
     loadAssigned();
@@ -182,7 +192,11 @@ export default function EditClientPage() {
   }
 
   const assignedIds = new Set(assigned.map((a) => a.exerciseId));
-  const available = library.filter((ex) => !assignedIds.has(ex.id));
+  const available = library.filter((ex) => {
+    if (assignedIds.has(ex.id)) return false;
+    if (filterTagId && !ex.tags?.some((t) => t.id === filterTagId)) return false;
+    return true;
+  });
 
   return (
     <div className="p-4 md:p-8 max-w-3xl">
@@ -378,6 +392,34 @@ export default function EditClientPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {allTags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Badge
+                variant={filterTagId === null ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => setFilterTagId(null)}
+              >
+                Toate
+              </Badge>
+              {allTags.map((tag) => (
+                <Badge
+                  key={tag.id}
+                  variant={filterTagId === tag.id ? "default" : "outline"}
+                  style={
+                    filterTagId === tag.id && tag.color
+                      ? { backgroundColor: tag.color, borderColor: tag.color }
+                      : undefined
+                  }
+                  className="cursor-pointer"
+                  onClick={() =>
+                    setFilterTagId(filterTagId === tag.id ? null : tag.id)
+                  }
+                >
+                  {tag.name}
+                </Badge>
+              ))}
+            </div>
+          )}
           {library.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Biblioteca este goală.{" "}

@@ -43,6 +43,17 @@ export default function EditExercisePage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState("");
   const [data, setData] = useState<ExerciseData | null>(null);
+  const [tagIds, setTagIds] = useState<string[]>([]);
+  const [tags, setTags] = useState<
+    { id: string; name: string; color: string | null }[]
+  >([]);
+
+  useEffect(() => {
+    fetch("/api/tags")
+      .then((r) => r.json())
+      .then(setTags)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch(`/api/exercises/${id}`)
@@ -60,6 +71,9 @@ export default function EditExercisePage() {
           equipment: ex.equipment ?? [],
           instructions: ex.instructions,
         });
+        setTagIds(
+          Array.isArray(ex.tags) ? ex.tags.map((t: { id: string }) => t.id) : []
+        );
         setInitialLoading(false);
       })
       .catch(() => {
@@ -99,6 +113,7 @@ export default function EditExercisePage() {
           bodyPart: data.bodyPart,
           equipment: data.equipment,
           instructions: data.instructions || null,
+          tagIds,
         }),
       });
       if (!res.ok) {
@@ -310,6 +325,38 @@ export default function EditExercisePage() {
                 ))}
               </div>
             </div>
+
+            {tags.length > 0 && (
+              <div className="space-y-2">
+                <Label>Afecțiuni</Label>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <Badge
+                      key={tag.id}
+                      variant={tagIds.includes(tag.id) ? "default" : "outline"}
+                      style={
+                        tagIds.includes(tag.id) && tag.color
+                          ? { backgroundColor: tag.color, borderColor: tag.color }
+                          : undefined
+                      }
+                      className="cursor-pointer"
+                      onClick={() =>
+                        setTagIds(
+                          tagIds.includes(tag.id)
+                            ? tagIds.filter((t) => t !== tag.id)
+                            : [...tagIds, tag.id]
+                        )
+                      }
+                    >
+                      {tag.name}
+                      {tagIds.includes(tag.id) && (
+                        <X className="h-3 w-3 ml-1" />
+                      )}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="instructions">Instrucțiuni</Label>

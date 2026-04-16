@@ -11,6 +11,7 @@ export async function GET(
     where: { id },
     include: {
       annotations: { orderBy: { timestampSec: "asc" } },
+      tags: true,
     },
   });
 
@@ -32,6 +33,10 @@ export async function PUT(
   const { id } = await params;
   const data = await request.json();
 
+  const tagIds: string[] | undefined = Array.isArray(data.tagIds)
+    ? data.tagIds
+    : undefined;
+
   const exercise = await prisma.exercise.update({
     where: { id },
     data: {
@@ -45,7 +50,12 @@ export async function PUT(
       bodyPart: data.bodyPart,
       equipment: data.equipment,
       instructions: data.instructions,
+      tags:
+        tagIds !== undefined
+          ? { set: tagIds.map((tid) => ({ id: tid })) }
+          : undefined,
     },
+    include: { tags: true },
   });
 
   return NextResponse.json(exercise);

@@ -13,6 +13,7 @@ import {
   Home,
   Menu,
   X,
+  Tag as TagIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
@@ -22,6 +23,7 @@ import { useEffect, useState } from "react";
 const navItems = [
   { href: "/admin", label: "Panou principal", icon: Home },
   { href: "/admin/exercises", label: "Exerciții", icon: Dumbbell },
+  { href: "/admin/tags", label: "Afecțiuni", icon: TagIcon },
   { href: "/admin/clients", label: "Pacienți", icon: Users },
   { href: "/admin/analytics", label: "Analize", icon: BarChart3 },
   { href: "/admin/settings", label: "Setări", icon: Settings },
@@ -52,7 +54,7 @@ export function AdminSidebar() {
   const nav = (
     <>
       <div className="p-6 border-b flex items-center justify-between">
-        <Link href="/admin" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
             <Activity className="h-5 w-5" />
           </div>
@@ -117,7 +119,7 @@ export function AdminSidebar() {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <Link href="/admin" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
             <Activity className="h-4 w-4" />
           </div>

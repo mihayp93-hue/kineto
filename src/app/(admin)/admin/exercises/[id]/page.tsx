@@ -21,6 +21,7 @@ export default async function ExerciseDetailPage({
     where: { id },
     include: {
       annotations: { orderBy: { timestampSec: "asc" } },
+      tags: true,
       _count: { select: { planExercises: true } },
     },
   });
@@ -110,6 +111,24 @@ export default async function ExerciseDetailPage({
                     <Badge key={item} variant="outline" className="text-xs">
                       {item}
                     </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+            {exercise.tags.length > 0 && (
+              <div>
+                <p className="text-sm font-medium mb-1">Afecțiuni</p>
+                <div className="flex flex-wrap gap-1">
+                  {exercise.tags.map((tag) => (
+                    <span
+                      key={tag.id}
+                      className="inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full text-white"
+                      style={{
+                        backgroundColor: tag.color ?? "#94a3b8",
+                      }}
+                    >
+                      {tag.name}
+                    </span>
                   ))}
                 </div>
               </div>

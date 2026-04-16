@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function ExercisesPage() {
   const exercises = await prisma.exercise.findMany({
     orderBy: { createdAt: "desc" },
-    include: { _count: { select: { planExercises: true } } },
+    include: { tags: true, _count: { select: { planExercises: true } } },
   });
 
   return (
@@ -82,6 +82,21 @@ export default async function ExercisesPage() {
                         </span>
                       )}
                     </div>
+                    {exercise.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {exercise.tags.map((tag) => (
+                          <span
+                            key={tag.id}
+                            className="inline-flex items-center text-[10px] font-medium px-1.5 py-0.5 rounded-full text-white"
+                            style={{
+                              backgroundColor: tag.color ?? "#94a3b8",
+                            }}
+                          >
+                            {tag.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <p className="text-xs text-muted-foreground mt-2">
                       Folosit în {exercise._count.planExercises} planuri
                     </p>

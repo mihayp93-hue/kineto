@@ -93,6 +93,22 @@ model Exercise {
   createdBy    User              @relation(fields: [createdById], references: [id])
   annotations  VideoAnnotation[]
   planExercises PlanExercise[]
+  tags         Tag[]             @relation("ExerciseTags")
+}
+
+/// Afecțiuni / probleme (ex: "hernie de disc", "entorsă gleznă") —
+/// asociate cu exercițiile pentru a le găsi rapid pe cele relevante
+/// pentru o anumită problemă a pacientului.
+model Tag {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  color       String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  exercises   Exercise[] @relation("ExerciseTags")
 }
 
 model VideoAnnotation {

@@ -53,7 +53,7 @@ export function ClientSidebar() {
   const nav = (
     <>
       <div className="p-6 border-b flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
             <Activity className="h-5 w-5" />
           </div>
@@ -115,7 +115,7 @@ export function ClientSidebar() {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
             <Activity className="h-4 w-4" />
           </div>

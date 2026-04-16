@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,17 @@ export default function NewExercisePage() {
   const [error, setError] = useState("");
   const [bodyParts, setBodyParts] = useState<string[]>([]);
   const [equipment, setEquipment] = useState<string[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
+  const [tags, setTags] = useState<
+    { id: string; name: string; color: string | null }[]
+  >([]);
+
+  useEffect(() => {
+    fetch("/api/tags")
+      .then((r) => r.json())
+      .then(setTags)
+      .catch(() => {});
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -53,6 +64,7 @@ export default function NewExercisePage() {
           bodyPart: bodyParts,
           equipment,
           instructions: formData.get("instructions") || null,
+          tagIds,
         }),
       });
 
@@ -226,6 +238,32 @@ export default function NewExercisePage() {
                 ))}
               </div>
             </div>
+
+            {tags.length > 0 && (
+              <div className="space-y-2">
+                <Label>Afecțiuni</Label>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <Badge
+                      key={tag.id}
+                      variant={tagIds.includes(tag.id) ? "default" : "outline"}
+                      style={
+                        tagIds.includes(tag.id) && tag.color
+                          ? { backgroundColor: tag.color, borderColor: tag.color }
+                          : undefined
+                      }
+                      className="cursor-pointer"
+                      onClick={() => toggleItem(tag.id, tagIds, setTagIds)}
+                    >
+                      {tag.name}
+                      {tagIds.includes(tag.id) && (
+                        <X className="h-3 w-3 ml-1" />
+                      )}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="instructions">Instrucțiuni</Label>
