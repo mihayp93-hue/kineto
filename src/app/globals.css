@@ -50,39 +50,44 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.18 0.02 220);
+  /* Warm cream background — off-white with a hint of amber */
+  --background: oklch(0.985 0.008 85);
+  --foreground: oklch(0.22 0.02 60);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 220);
+  --card-foreground: oklch(0.22 0.02 60);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 220);
-  /* Teal — medical/healthcare accent */
-  --primary: oklch(0.58 0.11 195);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.015 200);
-  --secondary-foreground: oklch(0.25 0.04 220);
-  --muted: oklch(0.96 0.01 220);
-  --muted-foreground: oklch(0.5 0.02 220);
-  --accent: oklch(0.93 0.04 180);
-  --accent-foreground: oklch(0.25 0.06 200);
-  --destructive: oklch(0.6 0.22 27);
-  --border: oklch(0.92 0.01 220);
-  --input: oklch(0.92 0.01 220);
-  --ring: oklch(0.58 0.11 195);
-  --chart-1: oklch(0.6 0.12 195);
-  --chart-2: oklch(0.7 0.13 160);
-  --chart-3: oklch(0.65 0.13 260);
-  --chart-4: oklch(0.75 0.14 80);
-  --chart-5: oklch(0.65 0.2 20);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.99 0.005 220);
-  --sidebar-foreground: oklch(0.25 0.02 220);
-  --sidebar-primary: oklch(0.58 0.11 195);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.95 0.02 200);
-  --sidebar-accent-foreground: oklch(0.25 0.04 220);
-  --sidebar-border: oklch(0.92 0.01 220);
-  --sidebar-ring: oklch(0.58 0.11 195);
+  --popover-foreground: oklch(0.22 0.02 60);
+  /* Forest sage — restorative, grounded, natural */
+  --primary: oklch(0.42 0.08 155);
+  --primary-foreground: oklch(0.985 0.008 85);
+  --secondary: oklch(0.95 0.015 85);
+  --secondary-foreground: oklch(0.28 0.04 60);
+  --muted: oklch(0.95 0.012 75);
+  --muted-foreground: oklch(0.48 0.02 70);
+  /* Warm ochre / amber — accent for energy and warmth */
+  --accent: oklch(0.92 0.04 75);
+  --accent-foreground: oklch(0.28 0.08 60);
+  --destructive: oklch(0.58 0.2 28);
+  --border: oklch(0.91 0.015 75);
+  --input: oklch(0.91 0.015 75);
+  --ring: oklch(0.42 0.08 155);
+  --chart-1: oklch(0.48 0.09 155);
+  --chart-2: oklch(0.72 0.14 75);
+  --chart-3: oklch(0.6 0.12 220);
+  --chart-4: oklch(0.65 0.16 30);
+  --chart-5: oklch(0.55 0.1 280);
+  --radius: 0.9rem;
+  --sidebar: oklch(0.98 0.012 85);
+  --sidebar-foreground: oklch(0.28 0.02 60);
+  --sidebar-primary: oklch(0.42 0.08 155);
+  --sidebar-primary-foreground: oklch(0.985 0.008 85);
+  --sidebar-accent: oklch(0.94 0.025 80);
+  --sidebar-accent-foreground: oklch(0.28 0.04 60);
+  --sidebar-border: oklch(0.91 0.015 75);
+  --sidebar-ring: oklch(0.42 0.08 155);
+  /* Ochre accent token for specific decorative use */
+  --ochre: oklch(0.72 0.14 70);
+  --ochre-foreground: oklch(0.98 0.01 80);
 }
 
 .dark {
@@ -128,5 +133,59 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  /* Subtle paper-grain texture — layered tiny dot noise */
+  .bg-grain {
+    background-image: radial-gradient(
+      oklch(0.22 0.02 60 / 0.04) 1px,
+      transparent 1px
+    );
+    background-size: 4px 4px;
+  }
+
+  /* Dotted pattern used in hero and section backgrounds */
+  .bg-dots {
+    background-image: radial-gradient(
+      oklch(0.42 0.08 155 / 0.12) 1.2px,
+      transparent 1.2px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* Decorative hand-drawn underline for emphasis words in serif headings */
+  .accent-underline {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .accent-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.18em;
+    height: 0.22em;
+    background: var(--ochre);
+    opacity: 0.55;
+    border-radius: 999px;
+    transform: skewX(-4deg);
+  }
+
+  /* Ochre accent chip/text helpers */
+  .text-ochre {
+    color: var(--ochre);
+  }
+  .bg-ochre {
+    background-color: var(--ochre);
+    color: var(--ochre-foreground);
+  }
+  .bg-ochre\/10 {
+    background-color: color-mix(in oklch, var(--ochre) 10%, transparent);
+  }
+  .bg-ochre\/15 {
+    background-color: color-mix(in oklch, var(--ochre) 15%, transparent);
   }
 }

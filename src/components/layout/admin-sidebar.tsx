@@ -54,11 +54,19 @@ export function AdminSidebar() {
   const nav = (
     <>
       <div className="p-6 border-b flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-            <Activity className="h-5 w-5" />
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="h-9 w-9 relative rounded-[0.85rem] bg-gradient-to-br from-primary to-[oklch(0.35_0.07_155)] text-primary-foreground flex items-center justify-center shadow-sm">
+            <Activity className="h-4 w-4" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--ochre)] ring-2 ring-sidebar" />
           </div>
-          <span className="text-xl font-bold tracking-tight">PhysioConnect</span>
+          <div className="flex flex-col leading-none">
+            <span className="text-base font-bold tracking-tight">
+              PhysioConnect
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground mt-0.5">
+              Cabinet · Admin
+            </span>
+          </div>
         </Link>
         <button
           className="md:hidden p-1 text-muted-foreground"
@@ -68,9 +76,6 @@ export function AdminSidebar() {
           <X className="h-5 w-5" />
         </button>
       </div>
-      <p className="text-xs text-muted-foreground px-6 pb-2">
-        Panou administrator
-      </p>
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
@@ -111,7 +116,7 @@ export function AdminSidebar() {
   return (
     <>
       {/* Mobile topbar */}
-      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 h-14 border-b bg-white">
+      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 h-14 border-b bg-sidebar">
         <button
           className="p-2 -ml-2"
           aria-label="Deschide meniul"
@@ -120,16 +125,19 @@ export function AdminSidebar() {
           <Menu className="h-5 w-5" />
         </button>
         <Link href="/" className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-            <Activity className="h-4 w-4" />
+          <div className="h-7 w-7 relative rounded-lg bg-gradient-to-br from-primary to-[oklch(0.35_0.07_155)] text-primary-foreground flex items-center justify-center">
+            <Activity className="h-3.5 w-3.5" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[var(--ochre)] ring-2 ring-sidebar" />
           </div>
-          <span className="font-semibold tracking-tight">PhysioConnect</span>
+          <span className="font-semibold tracking-tight text-sm">
+            PhysioConnect
+          </span>
         </Link>
         <span className="w-9" />
       </header>
 
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 border-r bg-white flex-col h-full shrink-0">
+      <aside className="hidden md:flex w-64 border-r bg-sidebar flex-col h-full shrink-0">
         {nav}
       </aside>
 
@@ -140,7 +148,7 @@ export function AdminSidebar() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setOpen(false)}
           />
-          <aside className="relative w-72 max-w-[85%] bg-white flex flex-col h-full shadow-xl">
+          <aside className="relative w-72 max-w-[85%] bg-sidebar flex flex-col h-full shadow-xl">
             {nav}
           </aside>
         </div>
